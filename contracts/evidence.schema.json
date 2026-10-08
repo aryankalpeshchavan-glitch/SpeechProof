@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpeechProof Evidence",
+  "type": "object",
+  "required": [
+    "audio_file",
+    "rubric_version",
+    "scores",
+    "penalties",
+    "features",
+    "evidence",
+    "sha256"
+  ],
+  "properties": {
+    "audio_file": {
+      "type": "string"
+    },
+    "rubric_version": {
+      "type": "string"
+    },
+    "scores": {
+      "type": "object"
+    },
+    "penalties": {
+      "type": "object"
+    },
+    "features": {
+      "type": "object"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "dimension",
+          "type",
+          "start",
+          "end",
+          "measured_value",
+          "threshold"
+        ],
+        "properties": {
+          "dimension": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "start": {
+            "type": "number"
+          },
+          "end": {
+            "type": "number"
+          },
+          "measured_value": {},
+          "threshold": {},
+          "words_before": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+        },
+        "words_after": {
+            "type": "array",
+            "items": {
+            "type": "string"
+            }
+        }
+        }
+    }
+    },
+    "sha256": {
+    "type": "string"
+    }
+}
+}
