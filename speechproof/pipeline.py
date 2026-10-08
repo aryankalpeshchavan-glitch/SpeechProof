@@ -39,6 +39,13 @@ def run(wav):
     return evidence
 
 
+from contracts.scorer_protocol import ScorerProtocol, ScorerOutput
+
+class SpeechProofScorer(ScorerProtocol):
+    def score(self, audio_path: str) -> ScorerOutput:
+        raise NotImplementedError("Platform scorer integration not finalized yet.")
+
+
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:

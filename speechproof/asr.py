@@ -152,6 +152,22 @@ def extract_asr(audio_path: str, engine: Optional[ASREngine] = None) -> ASRTrans
         engine = FasterWhisperASREngine(local_files_only=True)
     return engine.transcribe(audio_path)
 
+def transcribe(wav: str):
+    """
+    Day-1 backward compatibility adapter for Krishna's pipeline.
+    Translates ASRTranscript object into a list of word dictionaries.
+    """
+    transcript = extract_asr(wav)
+    words = []
+    for segment in transcript.segments:
+        for word in segment.words:
+            words.append({
+                "word": word.word.strip(),
+                "start": round(word.start_s, 3),
+                "end": round(word.end_s, 3)
+            })
+    return words
+
 if __name__ == "__main__":
     import sys
     import argparse
