@@ -76,7 +76,8 @@ class SpeechProofScorer(ScorerProtocol):
                 "rubric_version": evidence.get("rubric_version"),
                 "overall_score": evidence.get("overall_score"),
                 "evidence_sha256": evidence.get("sha256"),
-                "run_id": evidence.get("run_id")
+                "run_id": evidence.get("run_id"),
+                "words": evidence.get("words", [])
             }
         )
 
