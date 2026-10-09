@@ -16,7 +16,9 @@ def get_scorer():
 
 @app.post("/score")
 def score(audio: UploadFile = File(...)):
-    temp_path = f"artifacts/temp_{audio.filename}"
+    import uuid
+    temp_filename = f"temp_{uuid.uuid4().hex}.wav"
+    temp_path = os.path.join("artifacts", temp_filename)
     os.makedirs("artifacts", exist_ok=True)
     try:
         with open(temp_path, "wb") as f:
@@ -44,8 +46,8 @@ def leaderboard():
         with sqlite3.connect("db/ledger.sqlite") as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            # Basic dummy query for frontend, just returning runs
-            cursor.execute("SELECT * FROM runs ORDER BY timestamp DESC LIMIT 10")
+            # Query against the shared schema using created_at
+            cursor.execute("SELECT * FROM runs ORDER BY created_at DESC LIMIT 10")
             runs = [dict(row) for row in cursor.fetchall()]
             return {"leaderboard": runs}
     except Exception as e:

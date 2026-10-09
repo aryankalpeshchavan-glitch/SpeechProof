@@ -20,41 +20,37 @@ class CrashTestLab:
 
     def run_battery(self, scorer: ScorerProtocol, dataset: str, audio_paths: list[str]):
         git_sha = self._get_git_sha()
-        
+
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            
-            # Temporary run creation just to get a run_id for now, we will update scorer name later from output
-            # Alternatively we could require the scorer to report its name upfront, but we get it from score().
-            # So we will run the first one to get metadata, or just wait to insert.
-            
+
             run_id = None
-            
+
             for path in audio_paths:
                 output = scorer.score(path)
-                
+
                 # validate
                 if not getattr(output, "scorer_name", None):
                     raise ValueError(f"Invalid contract output from scorer on {path}")
-                    
+
                 if run_id is None:
+                    # In audit mode, we might not have a rubric_version at the top level or overall_score
+                    # We will just insert what we have, leaving some fields NULL or empty if not present.
+                    # We will use output.audio_sha256 instead of the missing fields, wait, the schema requires audio_file, rubric_version, sha256 to be NOT NULL.
+                    # Let's check schema: audio_file NOT NULL, rubric_version NOT NULL, sha256 NOT NULL.
                     cursor.execute(
-                        "INSERT INTO runs (scorer_name, scorer_version, git_sha, dataset_id) VALUES (?, ?, ?, ?)",
-                        (output.scorer_name, output.scorer_version, git_sha, dataset)
+                        "INSERT INTO runs (audio_file, rubric_version, scorer_name, scorer_version, git_sha, dataset_id, overall_score, sha256) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        (path, getattr(output, "rubric_version", "unknown"), output.scorer_name, output.scorer_version, git_sha, dataset, getattr(output, "overall_score", None), output.audio_sha256)
                     )
                     run_id = cursor.lastrowid
-                    
-                cursor.execute(
-                    "INSERT INTO scores (run_id, audio_sha256, pace, pausing, fluency, pitch, energy) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        run_id,
-                        output.audio_sha256,
-                        output.scores.get("pace"),
-                        output.scores.get("pausing"),
-                        output.scores.get("fluency"),
-                        output.scores.get("pitch"),
-                        output.scores.get("energy")
-                    )
-                )
+
+                # Insert the five scores
+                for dimension in ["pace", "pausing", "fluency", "pitch", "energy"]:
+                    val = output.scores.get(dimension)
+                    if val is not None:
+                        cursor.execute(
+                            "INSERT INTO scores (run_id, dimension, score, penalty) VALUES (?, ?, ?, ?)",
+                            (run_id, dimension, val, 0.0)
+                        )
             conn.commit()
 

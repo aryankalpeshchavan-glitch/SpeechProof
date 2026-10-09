@@ -2,10 +2,15 @@ CREATE TABLE IF NOT EXISTS runs (
     run_id INTEGER PRIMARY KEY,
     audio_file TEXT NOT NULL,
     rubric_version TEXT NOT NULL,
+    scorer_name TEXT,
+    scorer_version TEXT,
+    git_sha TEXT,
+    dataset_id TEXT,
     overall_score REAL,
     sha256 TEXT NOT NULL,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE IF NOT EXISTS scores (
     run_id INTEGER,

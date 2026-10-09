@@ -59,6 +59,8 @@ def validate_audio(audio_path: str) -> None:
                 raise ValueError("Audio duration must be > 0.")
     except wave.Error as e:
         raise ValueError(f"Invalid WAV file: {e}")
+    except Exception as e:
+        raise ValueError(f"Invalid WAV file: {e}")
 
 class FasterWhisperASREngine(ASREngine):
     def __init__(self, local_files_only: bool = True):

@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# SpeechProof Project Specifics
+.env
+.venv
+node_modules/
+dist/
+build/
+*.sqlite
+*.sqlite3
+eval/outputs/

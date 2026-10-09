@@ -1,19 +1,20 @@
 import os
 from dotenv import load_dotenv
-from supabase import create_client
 
-load_dotenv()
+_supabase_client = None
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+def get_supabase_client():
+    global _supabase_client
+    if _supabase_client is None:
+        load_dotenv()
+        SUPABASE_URL = os.getenv("SUPABASE_URL")
+        SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+        if not SUPABASE_URL or not SUPABASE_KEY:
+            raise ValueError("Supabase credentials not found in .env")
+        from supabase import create_client
+        _supabase_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    return _supabase_client
 
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Supabase credentials not found in .env")
-
-supabase = create_client(
-    SUPABASE_URL,
-    SUPABASE_KEY
-)
 
 
 def save_run(evidence):
@@ -25,6 +26,7 @@ def save_run(evidence):
         "sha256": evidence["sha256"]
     }
 
+    supabase = get_supabase_client()
     run_response = (
         supabase
         .table("runs")
@@ -48,7 +50,7 @@ def save_run(evidence):
         })
 
     if score_rows:
-        supabase.table("scores").insert(score_rows).execute()
+        get_supabase_client().table("scores").insert(score_rows).execute()
 
     # 3. Save the measured features
     feature_rows = []
@@ -62,7 +64,7 @@ def save_run(evidence):
             })
 
     if feature_rows:
-        supabase.table("features").insert(feature_rows).execute()
+        get_supabase_client().table("features").insert(feature_rows).execute()
 
     # 4. Save ASR words and timestamps
     word_rows = []
@@ -76,7 +78,7 @@ def save_run(evidence):
         })
 
     if word_rows:
-        supabase.table("words").insert(word_rows).execute()
+        get_supabase_client().table("words").insert(word_rows).execute()
 
     print(f"Saved SpeechProof run successfully!")
     print(f"run_id = {run_id}")
@@ -85,6 +87,7 @@ def save_run(evidence):
 
 
 if __name__ == "__main__":
+    supabase = get_supabase_client()
     print("Supabase connection successful!")
 
     response = (
