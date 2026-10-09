@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS runs (
     dataset_id TEXT,
     overall_score REAL,
     sha256 TEXT NOT NULL,
+    evidence_json TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

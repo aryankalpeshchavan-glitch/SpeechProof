@@ -4,6 +4,7 @@
   "type": "object",
   "required": [
     "audio_file",
+    "audio_sha256",
     "rubric_version",
     "scores",
     "penalties",
@@ -13,6 +14,9 @@
   ],
   "properties": {
     "audio_file": {
+      "type": "string"
+    },
+    "audio_sha256": {
       "type": "string"
     },
     "rubric_version": {

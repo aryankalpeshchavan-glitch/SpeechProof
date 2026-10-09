@@ -54,38 +54,48 @@ def score(features, config=CONFIG):
     scores["pace"] = round(pace_score, 2)
     penalties["pace"] = round(pace_penalty, 2)
 
+    
     # -------------------------
     # 2. Pausing
     # -------------------------
     pause_ratio = features.get("pause_ratio", 0)
+    pause_max = features.get("pause_max_sec", 0)
+    pause_count = features.get("pause_count", 0)
 
-    max_ratio = config["pausing"]["max_pause_ratio"]
+    # Gradual penalty for time spent in long pauses
+    ratio_penalty = pause_ratio * 200
 
-    if pause_ratio <= max_ratio:
-        pause_score = 100
-    else:
-        excess = pause_ratio - max_ratio
-        pause_score = clamp(100 - excess * 500)
+    # Additional penalty for pauses longer than 0.8 seconds
+    duration_penalty = max(0, pause_max - 0.8) * 20
+
+    # Small penalty for repeated long pauses
+    count_penalty = max(0, pause_count - 2) * 2
+
+    pause_penalty = min(
+        100,
+        ratio_penalty + duration_penalty + count_penalty
+    )
+
+    pause_score = clamp(100 - pause_penalty)
 
     scores["pausing"] = round(pause_score, 2)
     penalties["pausing"] = round(100 - pause_score, 2)
 
-    # -------------------------
     # 3. Fluency
     # -------------------------
-    filler_rate = features.get("filler_rate_per_min", 0)
+    if "filler_rate_per_min" in features:
+        filler_rate = features["filler_rate_per_min"]
+        max_fillers = config["fluency"]["max_filler_rate"]
 
-    max_fillers = config["fluency"]["max_filler_rate"]
+        if filler_rate <= max_fillers:
+            fluency_score = 100
+        else:
+            fluency_score = clamp(
+                100 - (filler_rate - max_fillers) * 10
+            )
 
-    if filler_rate <= max_fillers:
-        fluency_score = 100
-    else:
-        fluency_score = clamp(
-            100 - (filler_rate - max_fillers) * 10
-        )
-
-    scores["fluency"] = round(fluency_score, 2)
-    penalties["fluency"] = round(100 - fluency_score, 2)
+        scores["fluency"] = round(fluency_score, 2)
+        penalties["fluency"] = round(100 - fluency_score, 2)
 
     # -------------------------
     # 4. Pitch Variety
@@ -105,8 +115,8 @@ def score(features, config=CONFIG):
             * 100
         )
 
-    scores["pitch_variety"] = round(pitch_score, 2)
-    penalties["pitch_variety"] = round(100 - pitch_score, 2)
+    scores["pitch"] = round(pitch_score, 2)
+    penalties["pitch"] = round(100 - pitch_score, 2)
 
     # -------------------------
     # 5. Vocal Energy
@@ -122,8 +132,8 @@ def score(features, config=CONFIG):
             energy_std / min_energy * 100
         )
 
-    scores["vocal_energy"] = round(energy_score, 2)
-    penalties["vocal_energy"] = round(100 - energy_score, 2)
+    scores["energy"] = round(energy_score, 2)
+    penalties["energy"] = round(100 - energy_score, 2)
 
     # -------------------------
     # Overall

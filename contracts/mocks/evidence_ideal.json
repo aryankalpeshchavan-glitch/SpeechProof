@@ -1,0 +1,31 @@
+{
+  "mock": true,
+  "audio_file": "data/real/aryan_test.wav",
+  "audio_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "rubric_version": "v1-mock",
+  "scores": {
+    "pace": 95,
+    "pausing": 90,
+    "pitch": 85,
+    "energy": 92
+  },
+  "penalties": {
+    "pace": 5
+  },
+  "features": {
+    "word_count": 100
+  },
+  "evidence": [
+    {
+      "dimension": "pausing",
+      "type": "long_pause",
+      "start": 1.0,
+      "end": 2.5,
+      "measured_value": 1.5,
+      "threshold": 0.4,
+      "words_before": ["hello"],
+      "words_after": ["world"]
+    }
+  ],
+  "sha256": "hash-ideal"
+}
