@@ -24,25 +24,27 @@ class CrashTestLab:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
 
-            run_id = None
-
             for path in audio_paths:
-                output = scorer.score(path)
+                try:
+                    output = scorer.score(path)
+                except Exception as e:
+                    print(f"Skipping recording {path} due to scoring error: {e}")
+                    continue
 
                 # validate
                 if not getattr(output, "scorer_name", None):
                     raise ValueError(f"Invalid contract output from scorer on {path}")
 
-                if run_id is None:
-                    # In audit mode, we might not have a rubric_version at the top level or overall_score
-                    # We will just insert what we have, leaving some fields NULL or empty if not present.
-                    # We will use output.audio_sha256 instead of the missing fields, wait, the schema requires audio_file, rubric_version, sha256 to be NOT NULL.
-                    # Let's check schema: audio_file NOT NULL, rubric_version NOT NULL, sha256 NOT NULL.
-                    cursor.execute(
-                        "INSERT INTO runs (audio_file, rubric_version, scorer_name, scorer_version, git_sha, dataset_id, overall_score, sha256) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                        (path, getattr(output, "rubric_version", "unknown"), output.scorer_name, output.scorer_version, git_sha, dataset, getattr(output, "overall_score", None), output.audio_sha256)
-                    )
-                    run_id = cursor.lastrowid
+                # Read from metadata since they are not top-level attributes
+                metadata = output.metadata or {}
+                rubric_version = metadata.get("rubric_version", "unknown")
+                overall_score = metadata.get("overall_score")
+
+                cursor.execute(
+                    "INSERT INTO runs (audio_file, rubric_version, scorer_name, scorer_version, git_sha, dataset_id, overall_score, sha256) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (path, rubric_version, output.scorer_name, output.scorer_version, git_sha, dataset, overall_score, output.audio_sha256)
+                )
+                run_id = cursor.lastrowid
 
                 # Insert the five scores
                 for dimension in ["pace", "pausing", "fluency", "pitch", "energy"]:
