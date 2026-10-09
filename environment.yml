@@ -18,3 +18,5 @@ dependencies:
     - praat-parselmouth
     - faster-whisper
     - jsonschema
+    - python-multipart
+    - httpx
