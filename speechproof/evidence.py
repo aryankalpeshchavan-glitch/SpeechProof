@@ -23,7 +23,7 @@ def verify_evidence(evidence):
     payload = {
         key: value
         for key, value in evidence.items()
-        if key != "sha256"
+        if key not in ("sha256", "run_id")
     }
 
     return stored_hash == sha256_json(payload)

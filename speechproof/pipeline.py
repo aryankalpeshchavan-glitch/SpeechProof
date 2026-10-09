@@ -69,9 +69,9 @@ class SpeechProofScorer(ScorerProtocol):
             scores=evidence.get("scores", {}),
             regions=evidence.get("evidence", []),
             events=[],
-            quality_flags=[],
+            quality_flags=["fluency_unavailable"] if "fluency" not in evidence.get("scores", {}) else [],
             audio_sha256=audio_sha256,
-            duration_s=evidence.get("features", {}).get("duration", 0.0),
+            duration_s=evidence.get("features", {}).get("duration_sec", 0.0),
             metadata={
                 "rubric_version": evidence.get("rubric_version"),
                 "overall_score": evidence.get("overall_score"),

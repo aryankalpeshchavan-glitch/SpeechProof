@@ -16,14 +16,8 @@ def run_smoke_test():
         print(f"audio SHA-256: {output.audio_sha256}")
         print(f"audio validation result: Valid WAV")
         
-        # we don't have segment/word count in ScorerOutput directly except through metadata
-        # Let's see if metadata has it (asr_metadata should have been passed to metadata, but maybe not)
-        # we can check what's inside
-        print(f"segment and word counts: Check metadata -> {output.metadata}")
-        
-        print("extracted feature names: ", list(output.scores.keys()) if hasattr(output, 'scores') else "N/A")
-        
-        print("actual scores for five dimensions: ")
+        print(f"duration_s: {output.duration_s}")
+        print("actual scores: ")
         for dim, val in output.scores.items():
             print(f"  {dim}: {val}")
             
