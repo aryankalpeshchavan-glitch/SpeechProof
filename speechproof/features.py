@@ -70,11 +70,7 @@ def extract(wav, words=None):
             if gap >= 0.4:
                 pauses.append(gap)
 
-        speech_duration = max(
-            words[-1]["end"] - words[0]["start"],
-            0.001
-        )
-
+        speech_duration = max(duration, 0.001)
         speech_rate_wpm = (
             word_count / speech_duration * 60
         )
