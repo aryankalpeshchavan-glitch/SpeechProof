@@ -25,7 +25,7 @@ def run_t1():
         print(f"BLOCKER: Authorized recording {audio_path} is missing.")
         return
 
-def compare_runs(successful_runs: List[Dict[str, Any]]) -> tuple:
+def compare_runs(successful_runs: List[Dict[str, Any]], attempted_runs: int = 5) -> tuple:
     comparisons = {
         "scores_match": "INCONCLUSIVE",
         "words_match": "INCONCLUSIVE",
@@ -36,11 +36,33 @@ def compare_runs(successful_runs: List[Dict[str, Any]]) -> tuple:
     if len(successful_runs) == 0:
         overall_status = "FAILED (Zero successful runs)"
         actual_comparisons = 0
-    elif len(successful_runs) == 1:
-        overall_status = "INCONCLUSIVE (Only one successful run)"
-        actual_comparisons = 0
+    elif len(successful_runs) < attempted_runs:
+        overall_status = f"INCONCLUSIVE (Only {len(successful_runs)}/{attempted_runs} successful runs)"
+        actual_comparisons = max(0, len(successful_runs) - 1)
+        # We can still run the comparisons to report them, but overall is INCONCLUSIVE
+        reference = successful_runs[0]
+
+        scores_match = True
+        words_match = True
+        regions_match = True
+        hashes_match = True
+
+        for r in successful_runs[1:]:
+            if r.get("scores") != reference.get("scores") or r.get("overall_score") != reference.get("overall_score"):
+                scores_match = False
+            if r.get("word_fingerprint") != reference.get("word_fingerprint"):
+                words_match = False
+            if r.get("region_fingerprint") != reference.get("region_fingerprint") or r.get("region_count") != reference.get("region_count"):
+                regions_match = False
+            if r.get("evidence_sha256") != reference.get("evidence_sha256"):
+                hashes_match = False
+
+        if actual_comparisons > 0:
+            comparisons["scores_match"] = "MATCH" if scores_match else "MISMATCH"
+            comparisons["words_match"] = "MATCH" if words_match else "MISMATCH"
+            comparisons["regions_match"] = "MATCH" if regions_match else "MISMATCH"
+            comparisons["evidence_hashes_match"] = "MATCH" if hashes_match else "MISMATCH"
     else:
-        overall_status = "COMPLETED"
         reference = successful_runs[0]
         actual_comparisons = len(successful_runs) - 1
 
