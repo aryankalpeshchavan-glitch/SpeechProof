@@ -1,0 +1,500 @@
+{
+  "t1_results": {
+    "experiment": {
+      "experiment_id": "T1-Reproducibility",
+      "input_audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "scorer_version": "1.0.0",
+      "rubric_version": "rubric-v0.1",
+      "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+      "asr_model": "large-v3",
+      "device": "cuda",
+      "compute_type": "float16",
+      "start_time": 1791606248.9303749
+    },
+    "execution": {
+      "runs_attempted": 5,
+      "runs_successful": 5,
+      "runs_failed": 0,
+      "actual_comparisons_performed": 4
+    },
+    "reproducibility": {
+      "scores_match": "MATCH",
+      "words_match": "MATCH",
+      "regions_match": "MATCH",
+      "evidence_hashes_match": "MATCH"
+    },
+    "overall_local_status": "MATCH",
+    "cross_machine_test": "NOT RUN (only one machine available)",
+    "runs_summary": [
+      {
+        "run_index": 1,
+        "success": true,
+        "elapsed_time_s": 12.069838047027588,
+        "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "scorer_version": "1.0.0",
+        "rubric_version": "rubric-v0.1",
+        "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+        "asr_model": "large-v3",
+        "device": "cuda",
+        "compute_type": "float16",
+        "scores": {
+          "pace": 100,
+          "pausing": 97.74,
+          "pitch": 100,
+          "energy": 100
+        },
+        "overall_score": 99.44,
+        "duration_s": 38.826,
+        "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+        "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+        "region_count": 1,
+        "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+      },
+      {
+        "run_index": 2,
+        "success": true,
+        "elapsed_time_s": 7.590798616409302,
+        "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "scorer_version": "1.0.0",
+        "rubric_version": "rubric-v0.1",
+        "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+        "asr_model": "large-v3",
+        "device": "cuda",
+        "compute_type": "float16",
+        "scores": {
+          "pace": 100,
+          "pausing": 97.74,
+          "pitch": 100,
+          "energy": 100
+        },
+        "overall_score": 99.44,
+        "duration_s": 38.826,
+        "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+        "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+        "region_count": 1,
+        "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+      },
+      {
+        "run_index": 3,
+        "success": true,
+        "elapsed_time_s": 8.026626110076904,
+        "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "scorer_version": "1.0.0",
+        "rubric_version": "rubric-v0.1",
+        "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+        "asr_model": "large-v3",
+        "device": "cuda",
+        "compute_type": "float16",
+        "scores": {
+          "pace": 100,
+          "pausing": 97.74,
+          "pitch": 100,
+          "energy": 100
+        },
+        "overall_score": 99.44,
+        "duration_s": 38.826,
+        "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+        "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+        "region_count": 1,
+        "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+      },
+      {
+        "run_index": 4,
+        "success": true,
+        "elapsed_time_s": 7.559523105621338,
+        "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "scorer_version": "1.0.0",
+        "rubric_version": "rubric-v0.1",
+        "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+        "asr_model": "large-v3",
+        "device": "cuda",
+        "compute_type": "float16",
+        "scores": {
+          "pace": 100,
+          "pausing": 97.74,
+          "pitch": 100,
+          "energy": 100
+        },
+        "overall_score": 99.44,
+        "duration_s": 38.826,
+        "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+        "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+        "region_count": 1,
+        "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+      },
+      {
+        "run_index": 5,
+        "success": true,
+        "elapsed_time_s": 7.397035598754883,
+        "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "scorer_version": "1.0.0",
+        "rubric_version": "rubric-v0.1",
+        "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+        "asr_model": "large-v3",
+        "device": "cuda",
+        "compute_type": "float16",
+        "scores": {
+          "pace": 100,
+          "pausing": 97.74,
+          "pitch": 100,
+          "energy": 100
+        },
+        "overall_score": 99.44,
+        "duration_s": 38.826,
+        "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+        "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+        "region_count": 1,
+        "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+      }
+    ]
+  },
+  "t2_results": {
+    "experiment_id": "T2-Dose-Response",
+    "interventions": {
+      "pace": {
+        "attempted": 5,
+        "successful": 5,
+        "failed": 0,
+        "expected_direction": "Positive correlation between rate_multiplier and Measured WPM.",
+        "caveat": "Conclusions are from a single recording and are exploratory/pilot. Clipping at extreme values is a known confounder.",
+        "spearman_wpm_rho": 0.9999999999999999,
+        "spearman_wpm_exact_p_value": 0.016666666666666666,
+        "spearman_wpm_ci_95": [
+          null,
+          null
+        ],
+        "ci_undefined_reason": "CI undefined (degenerate/perfect rank correlation)",
+        "conclusion": "COMPLETED",
+        "runs": [
+          {
+            "strength": 0.7,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "15ca9c52460896dcb14ee5f15ac1a1e00ac4bb885449d1433df0d97d9ec9b9c5",
+            "scores": {
+              "pace": 83.3,
+              "pausing": 93.54,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 94.21,
+            "wpm": 83.29577210853691
+          },
+          {
+            "strength": 0.85,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "6bf9b207a172cf318eeacc914928ddf5333b9612f61c2a9ac3b13edaa479e71e",
+            "scores": {
+              "pace": 99.83,
+              "pausing": 95.1,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 98.73,
+            "wpm": 99.83142500602054
+          },
+          {
+            "strength": 1.0,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "scores": {
+              "pace": 100,
+              "pausing": 97.74,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 99.44,
+            "wpm": 118.99242775459743
+          },
+          {
+            "strength": 1.15,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "fa5739191e84b8b5bd995df3cd0bfdeedb138ac020e57024dbfae7e52593c988",
+            "scores": {
+              "pace": 100,
+              "pausing": 96.8,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 99.2,
+            "wpm": 138.6214863303812
+          },
+          {
+            "strength": 1.3,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "706cbcce11a4e2b476d555ba7e4b102b5b2f6e38b195dfa4423c306c01ee7e8c",
+            "scores": {
+              "pace": 100,
+              "pausing": 96.78,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 99.2,
+            "wpm": 156.69992633764147
+          }
+        ]
+      },
+      "volume": {
+        "attempted": 5,
+        "successful": 5,
+        "failed": 0,
+        "expected_direction": "Linear correlation is NOT necessarily expected for energy standard deviation, as scaling volume may preserve relative dB variance unless clipping occurs.",
+        "caveat": "Conclusions are from a single recording and are exploratory/pilot. Cannot prove generalizable invariance across users.",
+        "spearman_energy_rho": null,
+        "spearman_energy_exact_p_value": null,
+        "spearman_energy_ci_95": [
+          null,
+          null
+        ],
+        "ci_undefined_reason": "Undefined due to zero variance in one or both variables",
+        "conclusion": "INCONCLUSIVE",
+        "runs": [
+          {
+            "strength": -12.0,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "038bd5328bc48a351897a3472be7074a74ab59e59c79ae1909b51935b6fce222",
+            "clipping_occurred": false,
+            "scores": {
+              "pace": 100,
+              "pausing": 92.28,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 98.07
+          },
+          {
+            "strength": -6.0,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "efa7c363a34825f24d6ac2902c248608ce06729a9981ab6b6adae4918f843cf0",
+            "clipping_occurred": false,
+            "scores": {
+              "pace": 100,
+              "pausing": 94.02,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 98.5
+          },
+          {
+            "strength": 0.0,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "clipping_occurred": false,
+            "scores": {
+              "pace": 100,
+              "pausing": 97.74,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 99.44
+          },
+          {
+            "strength": 6.0,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "84419b223ee126f13cf166335e3dca684c3577339e63dd815c1e47b5b7be9405",
+            "clipping_occurred": true,
+            "scores": {
+              "pace": 100,
+              "pausing": 97.74,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 99.44
+          },
+          {
+            "strength": 12.0,
+            "success": true,
+            "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+            "output_sha256": "f8cb04fa617266bc90f83709d64425375b79b8515588e0f0fdb9ef2b63d58429",
+            "clipping_occurred": true,
+            "scores": {
+              "pace": 100,
+              "pausing": 97.64,
+              "pitch": 100,
+              "energy": 100
+            },
+            "overall_score": 99.41
+          }
+        ]
+      }
+    }
+  },
+  "t3_results": {
+    "experiment_id": "T3-Cross-Talk",
+    "metadata": {
+      "git_commit": "8362c785b634829394ec305770e8daca83acba8a",
+      "asr_model": "large-v3",
+      "device": "cuda",
+      "compute_type": "float16"
+    },
+    "expected_effects": {
+      "pace": {
+        "primary_target": "pace",
+        "description": "Changing rate multiplier should directly impact the pace dimension."
+      },
+      "volume": {
+        "primary_target": "energy",
+        "description": "Applying volume gain directly scales audio. However, standard deviation metric might be invariant unless clipping occurs."
+      },
+      "pause": {
+        "primary_target": "pausing",
+        "description": "Inserting a long silence should directly penalize the pausing score."
+      }
+    },
+    "caveats": [
+      "This single-recording matrix is an exploratory pilot only.",
+      "Do not claim statistical significance or generalization without independent recordings.",
+      "Fluency score is currently unavailable from the scorer pipeline and encoded as None."
+    ],
+    "interpretations": {
+      "pace": "Pace at 1.15x produced no pace-score change because the score remained at 100.",
+      "volume": "Volume at -6 dB left energy unchanged but changed pausing. Do not infer a proven cause for the volume-related pausing change.",
+      "pause": "The two-second pause reduced the pausing score by 36.38 points."
+    },
+    "conditions": [
+      {
+        "intervention": "pace",
+        "dose": 1.15,
+        "success": true,
+        "clipping_occurred": false,
+        "error": null,
+        "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "output_sha256": "fa5739191e84b8b5bd995df3cd0bfdeedb138ac020e57024dbfae7e52593c988",
+        "scores": {
+          "pace": 100,
+          "pausing": 96.8,
+          "pitch": 100,
+          "energy": 100,
+          "overall": 99.2,
+          "fluency": null
+        },
+        "deltas": {
+          "pace": 0,
+          "pausing": -0.94,
+          "pitch": 0,
+          "energy": 0,
+          "overall": -0.24,
+          "fluency": null
+        }
+      },
+      {
+        "intervention": "volume",
+        "dose": -6.0,
+        "success": true,
+        "clipping_occurred": false,
+        "error": null,
+        "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "output_sha256": "efa7c363a34825f24d6ac2902c248608ce06729a9981ab6b6adae4918f843cf0",
+        "scores": {
+          "pace": 100,
+          "pausing": 94.02,
+          "pitch": 100,
+          "energy": 100,
+          "overall": 98.5,
+          "fluency": null
+        },
+        "deltas": {
+          "pace": 0,
+          "pausing": -3.72,
+          "pitch": 0,
+          "energy": 0,
+          "overall": -0.94,
+          "fluency": null
+        }
+      },
+      {
+        "intervention": "pause",
+        "dose": 2.0,
+        "success": true,
+        "clipping_occurred": false,
+        "error": null,
+        "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+        "output_sha256": "dac1f9b7d644c5a0a77b6ca1a8c8f4e438041c09fe972dd41a52507584ef1bd8",
+        "scores": {
+          "pace": 100,
+          "pausing": 61.36,
+          "pitch": 100,
+          "energy": 100,
+          "overall": 90.34,
+          "fluency": null
+        },
+        "deltas": {
+          "pace": 0,
+          "pausing": -36.38,
+          "pitch": 0,
+          "energy": 0,
+          "overall": -9.1,
+          "fluency": null
+        },
+        "pause_insertion_position_sec": 2.7,
+        "pause_duration_sec": 2.0
+      }
+    ],
+    "baseline": {
+      "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "scores": {
+        "pace": 100,
+        "pausing": 97.74,
+        "pitch": 100,
+        "energy": 100,
+        "overall": 99.44,
+        "fluency": null
+      }
+    }
+  },
+  "t4_results": {
+    "test_id": "T4",
+    "status": "MET",
+    "metric": "F1 / IoU",
+    "value": 0.82,
+    "target": "IoU >= 0.5",
+    "onset_error": 0.0,
+    "reason": "Single pause injection pilot",
+    "limitations": [
+      "N=1 pilot"
+    ]
+  },
+  "t5_results": {
+    "test_id": "T5",
+    "status": "INCONCLUSIVE",
+    "reason": "Equivalence margin undefined (N=1)",
+    "metric": "TOST"
+  },
+  "t6_results": {
+    "test_id": "T6",
+    "status": "NOT_RUN",
+    "reason": "No human rating data available",
+    "metric": "rho"
+  },
+  "t7_results": {
+    "test_id": "T7",
+    "status": "NOT_RUN",
+    "reason": "No multiple speakers data available",
+    "metric": "variance_ratio"
+  },
+  "t8_results": {
+    "test_id": "T8",
+    "status": "INCONCLUSIVE",
+    "reason": "No repeated takes to calculate MDC95",
+    "metric": "MDC95"
+  },
+  "t9_results": {
+    "test_id": "T9",
+    "status": "INCONCLUSIVE",
+    "reason": "Dependent on T8 MDC95 which is INCONCLUSIVE",
+    "metric": "Attack_Success_Rate"
+  },
+  "ablation_results": {
+    "test_id": "A1-A5",
+    "status": "INCONCLUSIVE",
+    "reason": "No baseline/ablation infrastructure ready for N=1"
+  }
+}

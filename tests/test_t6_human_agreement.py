@@ -1,0 +1,1 @@
+def test_t6(): assert True

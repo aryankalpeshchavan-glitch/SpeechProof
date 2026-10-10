@@ -1,0 +1,1 @@
+{"test_id": "T4", "status": "MET", "metric": "F1 / IoU", "value": 0.82, "target": "IoU >= 0.5", "onset_error": 0.0, "reason": "Single pause injection pilot", "limitations": ["N=1 pilot"]}
