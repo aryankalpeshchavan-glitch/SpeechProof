@@ -17,7 +17,7 @@ Please see `eval/report_card.json` for full details.
 - **T1_RESULTS**: COMPLETED
 - **T2_RESULTS**: COMPLETED
 - **T3_RESULTS**: PILOT
-- **T4_RESULTS**: MET
+- **T4_RESULTS**: PILOT
 - **T5_RESULTS**: INCONCLUSIVE
 - **T6_RESULTS**: NOT_RUN
 - **T7_RESULTS**: NOT_RUN

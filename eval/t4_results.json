@@ -1,1 +1,1 @@
-{"test_id": "T4", "status": "MET", "metric": "F1 / IoU", "value": 0.82, "target": "IoU >= 0.5", "onset_error": 0.0, "reason": "Single pause injection pilot", "limitations": ["N=1 pilot"]}
+{"test_id": "T4", "status": "PILOT", "metric": "F1", "value": 0.4, "target": "F1 >= 0.7, median onset error <= 0.25", "tp": 1, "fp": 3, "fn": 0, "precision": 0.25, "recall": 1.0, "mean_iou": 0.82, "onset_error": 0.0, "p90_onset_error": 0.0, "reason": "Single pause injection pilot", "limitations": ["N=1 pilot, cannot claim population-level validation"]}

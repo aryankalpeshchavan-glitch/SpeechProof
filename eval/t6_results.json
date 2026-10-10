@@ -1,1 +1,1 @@
-{"test_id": "T6", "status": "NOT_RUN", "reason": "No human rating data available", "metric": "rho"}
+{"test_id": "T6", "status": "NOT_RUN", "reason": "No human rating data available", "metric": "rho", "value": null, "limitations": ["No human raters"]}

@@ -1,1 +1,1 @@
-{"test_id": "T9", "status": "INCONCLUSIVE", "reason": "Dependent on T8 MDC95 which is INCONCLUSIVE", "metric": "Attack_Success_Rate"}
+{"test_id": "T9", "status": "INCONCLUSIVE", "reason": "Dependent on T8 MDC95 which is INCONCLUSIVE", "metric": "Attack_Success_Rate", "value": null, "limitations": ["No MDC95"]}
