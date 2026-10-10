@@ -104,47 +104,51 @@ def score(features, config=CONFIG):
         "pitch_std_semitones"
     )
 
-    if pitch_variety is None:
-        pitch_score = 0
-    elif pitch_variety >= config["pitch"]["min_pitch_std_semitones"]:
-        pitch_score = 100
-    else:
-        pitch_score = clamp(
-            pitch_variety /
-            config["pitch"]["min_pitch_std_semitones"]
-            * 100
-        )
+    if pitch_variety is not None:
+        if pitch_variety >= config["pitch"]["min_pitch_std_semitones"]:
+            pitch_score = 100
+        else:
+            pitch_score = clamp(
+                pitch_variety /
+                config["pitch"]["min_pitch_std_semitones"]
+                * 100
+            )
 
-    scores["pitch"] = round(pitch_score, 2)
-    penalties["pitch"] = round(100 - pitch_score, 2)
+        scores["pitch"] = round(pitch_score, 2)
+        penalties["pitch"] = round(100 - pitch_score, 2)
 
     # -------------------------
     # 5. Vocal Energy
     # -------------------------
-    energy_std = features.get("rms_db_std", 0)
+    energy_std = features.get("relative_rms_db_std", features.get("rms_db_std"))
 
     min_energy = config["energy"]["min_rms_std_db"]
 
-    if energy_std >= min_energy:
-        energy_score = 100
-    else:
-        energy_score = clamp(
-            energy_std / min_energy * 100
-        )
+    if energy_std is not None:
+        if energy_std >= min_energy:
+            energy_score = 100
+        else:
+            energy_score = clamp(
+                energy_std / min_energy * 100
+            )
 
-    scores["energy"] = round(energy_score, 2)
-    penalties["energy"] = round(100 - energy_score, 2)
+        scores["energy"] = round(energy_score, 2)
+        penalties["energy"] = round(100 - energy_score, 2)
 
     # -------------------------
     # Overall
     # -------------------------
-    overall = sum(scores.values()) / len(scores)
+    if len(scores) > 0:
+        overall = sum(scores.values()) / len(scores)
+        overall = round(overall, 2)
+    else:
+        overall = None
 
     return {
         "rubric_version": config["rubric_version"],
         "scores": scores,
         "penalties": penalties,
-        "overall_score": round(overall, 2)
+        "overall_score": overall
     }
 
 

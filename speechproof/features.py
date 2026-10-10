@@ -89,6 +89,7 @@ def extract(wav, words=None):
         "duration_sec": round(duration, 3),
 
         "word_count": word_count,
+        # speech_rate_wpm measures words per minute over elapsed recording time, including pauses.
         "speech_rate_wpm": round(
             speech_rate_wpm, 2
         ),
@@ -106,11 +107,11 @@ def extract(wav, words=None):
             pause_ratio, 4
         ),
 
-        "rms_db_mean": round(
+        "relative_rms_db_mean": round(
             float(np.mean(rms_db)), 3
         ),
 
-        "rms_db_std": round(
+        "relative_rms_db_std": round(
             float(np.std(rms_db)), 3
         ),
 

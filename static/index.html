@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeechProof - Contrastive Speech Analytics</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>SpeechProof</h1>
+        <nav>
+            <button onclick="showTab('analyze')">Analyze</button>
+            <button onclick="showTab('compare')">Compare</button>
+            <button onclick="showTab('crash-test-lab')">Crash Test Lab</button>
+            <button onclick="showTab('history')">Run History</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="analyze" class="tab-content active">
+            <h2>Analyze Recording</h2>
+            <p>Upload a speech recording for detailed acoustic analysis and temporal flaw grounding.</p>
+            <input type="file" id="analyze-file" accept="audio/wav">
+            <button onclick="runAnalyze()">Analyze Speech</button>
+            <div id="analyze-results" class="results-container"></div>
+        </section>
+
+        <section id="compare" class="tab-content">
+            <h2>Contrastive Comparison</h2>
+            <p>Upload a reference recording and your candidate delivery.</p>
+            <label>Reference:</label>
+            <input type="file" id="compare-ref-file" accept="audio/wav">
+            <br>
+            <label>Candidate:</label>
+            <input type="file" id="compare-cand-file" accept="audio/wav">
+            <br>
+            <button onclick="runCompare()">Compare Deliveries</button>
+            <div id="compare-results" class="results-container"></div>
+        </section>
+
+        <section id="crash-test-lab" class="tab-content">
+            <h2>Crash Test Lab</h2>
+            <p>Inject a controlled flaw and measure its effect on the scoring pipeline.</p>
+            <input type="file" id="crash-file" accept="audio/wav">
+            <select id="crash-type">
+                <option value="pause">Pause Injection</option>
+                <option value="pace">Pace Modification</option>
+                <option value="volume">Volume Modification</option>
+            </select>
+            <input type="number" id="crash-intensity" placeholder="Intensity/Value" value="2" step="0.1">
+            <button onclick="runCrashTest()">Run Crash Test</button>
+            <div id="crash-results" class="results-container"></div>
+        </section>
+
+        <section id="history" class="tab-content">
+            <h2>Run History</h2>
+            <button onclick="loadHistory()">Refresh Leaderboard</button>
+            <div id="history-results" class="results-container"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
