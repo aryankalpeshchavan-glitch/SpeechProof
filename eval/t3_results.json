@@ -1,0 +1,110 @@
+{
+  "experiment_id": "T3-Cross-Talk",
+  "expected_effects": {
+    "pace": {
+      "primary_target": "pace",
+      "description": "Changing rate multiplier should directly impact the pace dimension."
+    },
+    "volume": {
+      "primary_target": "energy",
+      "description": "Applying volume gain directly scales audio. However, standard deviation metric might be invariant unless clipping occurs."
+    },
+    "pause": {
+      "primary_target": "pausing",
+      "description": "Inserting a long silence should directly penalize the pausing score."
+    }
+  },
+  "caveats": [
+    "This single-recording matrix is an exploratory pilot only.",
+    "Do not claim statistical significance or generalization without independent recordings.",
+    "Fluency score is currently unavailable from the scorer pipeline and encoded as None."
+  ],
+  "conditions": [
+    {
+      "intervention": "pace",
+      "dose": 1.15,
+      "success": true,
+      "clipping_occurred": false,
+      "error": null,
+      "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "output_sha256": "fa5739191e84b8b5bd995df3cd0bfdeedb138ac020e57024dbfae7e52593c988",
+      "scores": {
+        "pace": 100,
+        "pausing": 96.8,
+        "pitch": 100,
+        "energy": 100,
+        "overall": 99.2,
+        "fluency": null
+      },
+      "deltas": {
+        "pace": 0,
+        "pausing": -0.94,
+        "pitch": 0,
+        "energy": 0,
+        "overall": -0.24,
+        "fluency": null
+      }
+    },
+    {
+      "intervention": "volume",
+      "dose": -6.0,
+      "success": true,
+      "clipping_occurred": false,
+      "error": null,
+      "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "output_sha256": "efa7c363a34825f24d6ac2902c248608ce06729a9981ab6b6adae4918f843cf0",
+      "scores": {
+        "pace": 100,
+        "pausing": 94.02,
+        "pitch": 100,
+        "energy": 100,
+        "overall": 98.5,
+        "fluency": null
+      },
+      "deltas": {
+        "pace": 0,
+        "pausing": -3.72,
+        "pitch": 0,
+        "energy": 0,
+        "overall": -0.94,
+        "fluency": null
+      }
+    },
+    {
+      "intervention": "pause",
+      "dose": 2.0,
+      "success": true,
+      "clipping_occurred": false,
+      "error": null,
+      "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "output_sha256": "dac1f9b7d644c5a0a77b6ca1a8c8f4e438041c09fe972dd41a52507584ef1bd8",
+      "scores": {
+        "pace": 100,
+        "pausing": 61.36,
+        "pitch": 100,
+        "energy": 100,
+        "overall": 90.34,
+        "fluency": null
+      },
+      "deltas": {
+        "pace": 0,
+        "pausing": -36.38,
+        "pitch": 0,
+        "energy": 0,
+        "overall": -9.1,
+        "fluency": null
+      }
+    }
+  ],
+  "baseline": {
+    "input_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+    "scores": {
+      "pace": 100,
+      "pausing": 97.74,
+      "pitch": 100,
+      "energy": 100,
+      "overall": 99.44,
+      "fluency": null
+    }
+  }
+}

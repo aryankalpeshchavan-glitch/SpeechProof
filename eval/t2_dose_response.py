@@ -16,25 +16,35 @@ def get_file_sha256(path: str) -> str:
     with open(path, 'rb') as f:
         return hashlib.sha256(f.read()).hexdigest()
 
-def spearman_with_ci(x: List[float], y: List[float], confidence=0.95) -> Tuple[float, float, float, float]:
-    """Calculate Spearman correlation and its confidence interval via Fisher transformation."""
+def spearman_with_ci(x: List[float], y: List[float], confidence=0.95) -> Tuple[Any, Any, Any, Any, Any]:
+    """Calculate Spearman correlation, exact p-value via permutation, and CI."""
     if len(x) < 3 or len(np.unique(x)) < 2 or len(np.unique(y)) < 2:
-        return np.nan, np.nan, np.nan, np.nan
+        return None, None, None, None, "Undefined due to zero variance in one or both variables"
         
-    rho, p_value = stats.spearmanr(x, y)
+    rho, p_asymptotic = stats.spearmanr(x, y)
+    
+    # Exact permutation test
+    def spearman_stat(x_perm):
+        return stats.spearmanr(x_perm, y).statistic
+    try:
+        perm_res = stats.permutation_test((x,), spearman_stat, permutation_type='pairings', alternative='two-sided')
+        p_exact = perm_res.pvalue
+    except Exception:
+        p_exact = p_asymptotic
     
     # Fisher transform for CI
-    if abs(rho) == 1.0:
-        return rho, p_value, rho, rho
-        
-    z = np.arctanh(rho)
-    se = 1.0 / np.sqrt(len(x) - 3)
-    z_crit = stats.norm.ppf(1 - (1 - confidence) / 2)
+    if abs(rho) >= 0.999999:
+        ci_lower, ci_upper = None, None
+        reason = "CI undefined (degenerate/perfect rank correlation)"
+    else:
+        z = np.arctanh(rho)
+        se = 1.0 / np.sqrt(len(x) - 3)
+        z_crit = stats.norm.ppf(1 - (1 - confidence) / 2)
+        ci_lower = float(np.tanh(z - z_crit * se))
+        ci_upper = float(np.tanh(z + z_crit * se))
+        reason = None
     
-    ci_lower = np.tanh(z - z_crit * se)
-    ci_upper = np.tanh(z + z_crit * se)
-    
-    return rho, p_value, ci_lower, ci_upper
+    return float(rho), float(p_exact), ci_lower, ci_upper, reason
 
 def run_t2():
     audio_path = "data/real/aryan_test.wav"
@@ -90,17 +100,19 @@ def run_t2():
         x_pace = [r["strength"] for r in successful_pace]
         y_wpm = [r["wpm"] for r in successful_pace]
         
-        rho_wpm, p_wpm, ci_l_wpm, ci_u_wpm = spearman_with_ci(x_pace, y_wpm)
+        rho_wpm, p_wpm, ci_l_wpm, ci_u_wpm, reason = spearman_with_ci(x_pace, y_wpm)
         
         pace_analysis = {
             "attempted": len(pace_strengths),
             "successful": len(successful_pace),
             "failed": len(pace_strengths) - len(successful_pace),
             "expected_direction": "Positive correlation between rate_multiplier and Measured WPM.",
+            "caveat": "Conclusions are from a single recording and are exploratory/pilot. Clipping at extreme values is a known confounder.",
             "spearman_wpm_rho": rho_wpm,
-            "spearman_wpm_p_value": p_wpm,
+            "spearman_wpm_exact_p_value": p_wpm,
             "spearman_wpm_ci_95": [ci_l_wpm, ci_u_wpm],
-            "conclusion": "INCONCLUSIVE" if np.isnan(rho_wpm) else "COMPLETED",
+            "ci_undefined_reason": reason,
+            "conclusion": "INCONCLUSIVE" if rho_wpm is None else "COMPLETED",
             "runs": pace_runs
         }
     else:
@@ -143,17 +155,19 @@ def run_t2():
         x_vol = [r["strength"] for r in successful_vol]
         y_energy = [r["scores"].get("energy", 0) for r in successful_vol]
         
-        rho_energy, p_energy, ci_l_energy, ci_u_energy = spearman_with_ci(x_vol, y_energy)
+        rho_energy, p_energy, ci_l_energy, ci_u_energy, reason = spearman_with_ci(x_vol, y_energy)
         
         vol_analysis = {
             "attempted": len(volume_strengths),
             "successful": len(successful_vol),
             "failed": len(volume_strengths) - len(successful_vol),
             "expected_direction": "Linear correlation is NOT necessarily expected for energy standard deviation, as scaling volume may preserve relative dB variance unless clipping occurs.",
+            "caveat": "Conclusions are from a single recording and are exploratory/pilot. Cannot prove generalizable invariance across users.",
             "spearman_energy_rho": rho_energy,
-            "spearman_energy_p_value": p_energy,
+            "spearman_energy_exact_p_value": p_energy,
             "spearman_energy_ci_95": [ci_l_energy, ci_u_energy],
-            "conclusion": "INCONCLUSIVE" if np.isnan(rho_energy) else "COMPLETED",
+            "ci_undefined_reason": reason,
+            "conclusion": "INCONCLUSIVE" if rho_energy is None else "COMPLETED",
             "runs": volume_runs
         }
     else:
@@ -162,10 +176,10 @@ def run_t2():
     results_summary["interventions"]["volume"] = vol_analysis
     
     with open("eval/t2_results.json", "w") as f:
-        json.dump(results_summary, f, indent=2)
+        json.dump(results_summary, f, indent=2, allow_nan=False)
         
     with open("eval/outputs/t2_raw_artifacts.json", "w") as f:
-        json.dump(raw_artifacts, f, indent=2)
+        json.dump(raw_artifacts, f, indent=2, allow_nan=False)
         
     print("\nT2 Dose-Response Evaluation complete.")
     print("Sanitized results saved to eval/t2_results.json")

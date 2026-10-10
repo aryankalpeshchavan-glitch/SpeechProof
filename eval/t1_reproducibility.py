@@ -17,13 +17,6 @@ def canonical_fingerprint(data: Any) -> str:
     canonical_json = json.dumps(data, sort_keys=True, separators=(',', ':'))
     return hashlib.sha256(canonical_json.encode('utf-8')).hexdigest()
 
-def run_t1():
-    audio_path = "data/real/aryan_test.wav"
-    print(f"Starting T1 - Reproducibility Evaluation on {audio_path}")
-
-    if not Path(audio_path).exists():
-        print(f"BLOCKER: Authorized recording {audio_path} is missing.")
-        return
 
 def compare_runs(successful_runs: List[Dict[str, Any]], attempted_runs: int = 5) -> tuple:
     comparisons = {

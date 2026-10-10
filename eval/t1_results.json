@@ -1,0 +1,149 @@
+{
+  "experiment": {
+    "experiment_id": "T1-Reproducibility",
+    "input_audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+    "scorer_version": "1.0.0",
+    "rubric_version": "rubric-v0.1",
+    "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+    "asr_model": "large-v3",
+    "device": "cuda",
+    "compute_type": "float16",
+    "start_time": 1791606248.9303749
+  },
+  "execution": {
+    "runs_attempted": 5,
+    "runs_successful": 5,
+    "runs_failed": 0,
+    "actual_comparisons_performed": 4
+  },
+  "reproducibility": {
+    "scores_match": "MATCH",
+    "words_match": "MATCH",
+    "regions_match": "MATCH",
+    "evidence_hashes_match": "MATCH"
+  },
+  "overall_local_status": "MATCH",
+  "cross_machine_test": "NOT RUN (only one machine available)",
+  "runs_summary": [
+    {
+      "run_index": 1,
+      "success": true,
+      "elapsed_time_s": 12.069838047027588,
+      "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "scorer_version": "1.0.0",
+      "rubric_version": "rubric-v0.1",
+      "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+      "asr_model": "large-v3",
+      "device": "cuda",
+      "compute_type": "float16",
+      "scores": {
+        "pace": 100,
+        "pausing": 97.74,
+        "pitch": 100,
+        "energy": 100
+      },
+      "overall_score": 99.44,
+      "duration_s": 38.826,
+      "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+      "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+      "region_count": 1,
+      "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+    },
+    {
+      "run_index": 2,
+      "success": true,
+      "elapsed_time_s": 7.590798616409302,
+      "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "scorer_version": "1.0.0",
+      "rubric_version": "rubric-v0.1",
+      "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+      "asr_model": "large-v3",
+      "device": "cuda",
+      "compute_type": "float16",
+      "scores": {
+        "pace": 100,
+        "pausing": 97.74,
+        "pitch": 100,
+        "energy": 100
+      },
+      "overall_score": 99.44,
+      "duration_s": 38.826,
+      "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+      "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+      "region_count": 1,
+      "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+    },
+    {
+      "run_index": 3,
+      "success": true,
+      "elapsed_time_s": 8.026626110076904,
+      "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "scorer_version": "1.0.0",
+      "rubric_version": "rubric-v0.1",
+      "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+      "asr_model": "large-v3",
+      "device": "cuda",
+      "compute_type": "float16",
+      "scores": {
+        "pace": 100,
+        "pausing": 97.74,
+        "pitch": 100,
+        "energy": 100
+      },
+      "overall_score": 99.44,
+      "duration_s": 38.826,
+      "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+      "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+      "region_count": 1,
+      "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+    },
+    {
+      "run_index": 4,
+      "success": true,
+      "elapsed_time_s": 7.559523105621338,
+      "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "scorer_version": "1.0.0",
+      "rubric_version": "rubric-v0.1",
+      "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+      "asr_model": "large-v3",
+      "device": "cuda",
+      "compute_type": "float16",
+      "scores": {
+        "pace": 100,
+        "pausing": 97.74,
+        "pitch": 100,
+        "energy": 100
+      },
+      "overall_score": 99.44,
+      "duration_s": 38.826,
+      "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+      "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+      "region_count": 1,
+      "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+    },
+    {
+      "run_index": 5,
+      "success": true,
+      "elapsed_time_s": 7.397035598754883,
+      "audio_sha256": "6aa232cfc16f8ec63d0f8423d3ea4fbc12ae1df1571731b40ccc8c580e74f615",
+      "scorer_version": "1.0.0",
+      "rubric_version": "rubric-v0.1",
+      "git_commit": "8305fdad36daf35243e3fbc392d9a4aeae27d6cd",
+      "asr_model": "large-v3",
+      "device": "cuda",
+      "compute_type": "float16",
+      "scores": {
+        "pace": 100,
+        "pausing": 97.74,
+        "pitch": 100,
+        "energy": 100
+      },
+      "overall_score": 99.44,
+      "duration_s": 38.826,
+      "evidence_sha256": "980058b1d8141ed9d0fe225a7cb13addcde28bed6283ae86002a92235a5d5713",
+      "word_fingerprint": "4f63d00ab4eba2129f8b2c0d9f2d44e1f21c9441a30bef5413a233769694159f",
+      "region_count": 1,
+      "region_fingerprint": "f0cfca7854339b7338ce901c9b5224de587f51253cfaad7cc81d0f466af3dff2"
+    }
+  ]
+}
