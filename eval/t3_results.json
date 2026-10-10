@@ -1,5 +1,11 @@
 {
   "experiment_id": "T3-Cross-Talk",
+  "metadata": {
+    "git_commit": "8362c785b634829394ec305770e8daca83acba8a",
+    "asr_model": "large-v3",
+    "device": "cuda",
+    "compute_type": "float16"
+  },
   "expected_effects": {
     "pace": {
       "primary_target": "pace",
@@ -19,6 +25,11 @@
     "Do not claim statistical significance or generalization without independent recordings.",
     "Fluency score is currently unavailable from the scorer pipeline and encoded as None."
   ],
+  "interpretations": {
+    "pace": "Pace at 1.15x produced no pace-score change because the score remained at 100.",
+    "volume": "Volume at -6 dB left energy unchanged but changed pausing. Do not infer a proven cause for the volume-related pausing change.",
+    "pause": "The two-second pause reduced the pausing score by 36.38 points."
+  },
   "conditions": [
     {
       "intervention": "pace",
@@ -93,7 +104,9 @@
         "energy": 0,
         "overall": -9.1,
         "fluency": null
-      }
+      },
+      "pause_insertion_position_sec": 2.7,
+      "pause_duration_sec": 2.0
     }
   ],
   "baseline": {

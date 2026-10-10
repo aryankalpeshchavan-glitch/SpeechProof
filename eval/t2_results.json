@@ -6,12 +6,14 @@
       "successful": 5,
       "failed": 0,
       "expected_direction": "Positive correlation between rate_multiplier and Measured WPM.",
+      "caveat": "Conclusions are from a single recording and are exploratory/pilot. Clipping at extreme values is a known confounder.",
       "spearman_wpm_rho": 0.9999999999999999,
-      "spearman_wpm_p_value": 1.4042654220543608e-24,
+      "spearman_wpm_exact_p_value": 0.016666666666666666,
       "spearman_wpm_ci_95": [
-        0.9999999999999982,
-        1.0
+        null,
+        null
       ],
+      "ci_undefined_reason": "CI undefined (degenerate/perfect rank correlation)",
       "conclusion": "COMPLETED",
       "runs": [
         {
@@ -91,12 +93,14 @@
       "successful": 5,
       "failed": 0,
       "expected_direction": "Linear correlation is NOT necessarily expected for energy standard deviation, as scaling volume may preserve relative dB variance unless clipping occurs.",
-      "spearman_energy_rho": NaN,
-      "spearman_energy_p_value": NaN,
+      "caveat": "Conclusions are from a single recording and are exploratory/pilot. Cannot prove generalizable invariance across users.",
+      "spearman_energy_rho": null,
+      "spearman_energy_exact_p_value": null,
       "spearman_energy_ci_95": [
-        NaN,
-        NaN
+        null,
+        null
       ],
+      "ci_undefined_reason": "Undefined due to zero variance in one or both variables",
       "conclusion": "INCONCLUSIVE",
       "runs": [
         {

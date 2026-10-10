@@ -84,3 +84,9 @@ def test_source_file_unchanged(dummy_audio_path, tmp_path):
         new_hash = f.read()
         
     assert orig_hash == new_hash
+
+import json
+def test_published_result_format_cannot_contain_nan():
+    data = {'val': float('nan')}
+    with pytest.raises(ValueError):
+        json.dumps(data, allow_nan=False)
