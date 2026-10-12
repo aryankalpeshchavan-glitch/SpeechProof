@@ -1,0 +1,2 @@
+test,original_run_id,injected_run_id,original_audio,injected_audio,original_overall,injected_overall,overall_change,original_pausing,injected_pausing,pausing_change
+Pause injection comparison,20,21,data\real\sample_speech.wav,data\injected\sample_pause_1s.wav,98.98,95.42,-3.56,94.9,77.1,-17.8

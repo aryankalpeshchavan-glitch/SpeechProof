@@ -1,0 +1,24 @@
+run_id,audio_file,rubric_version,overall_score,integrity_status,pace,pausing,fluency,pitch_variety,vocal_energy
+1,data\real\test.wav,rubric-v0.1,43.19,MISSING EVIDENCE,0,100,100,0,15.97
+2,data\real\sample_speech.wav,rubric-v0.1,100,MISSING EVIDENCE,100,100,100,100,100
+3,data\injected\sample_pause_1s.wav,rubric-v0.1,100,MISSING EVIDENCE,100,100,100,100,100
+4,data\real\sample_speech.wav,rubric-v0.1,100,MISSING EVIDENCE,100,100,100,100,100
+5,data\injected\sample_pause_1s.wav,rubric-v0.1,100,MISSING EVIDENCE,100,100,100,100,100
+6,data\real\sample_speech.wav,rubric-v0.1,100,MISSING EVIDENCE,100,100,100,100,100
+7,data\injected\sample_pause_1s.wav,rubric-v0.1,100,MISSING EVIDENCE,100,100,100,100,100
+8,data\real\sample_speech.wav,rubric-v0.1,98.98,MISSING EVIDENCE,100,94.9,100,100,100
+9,data\injected\sample_pause_1s.wav,rubric-v0.1,96.66,MISSING EVIDENCE,100,83.3,100,100,100
+10,data\real\sample_speech.wav,rubric-v0.1,98.98,MISSING EVIDENCE,100,94.9,100,100,100
+11,data\real\sample_speech.wav,rubric-v0.1,98.98,VERIFIED,100,94.9,100,100,100
+12,data\real\sample_speech.wav,rubric-v0.1,98.98,VERIFIED,100,94.9,100,100,100
+13,data\injected\sample_pause_1s.wav,rubric-v0.1,95.42,VERIFIED,100,77.1,100,100,100
+14,data\real\sample_speech.wav,rubric-v0.1,98.98,VERIFIED,100,94.9,100,100,100
+15,data\real\test.wav,rubric-v0.1,43.19,VERIFIED,0,100,100,0,15.97
+16,data\real\sample_speech.wav,rubric-v0.1,98.98,VERIFIED,100,94.9,100,100,100
+17,data\real\sample_speech.wav,rubric-v0.1,98.94,VERIFIED,100,94.68,100,100,100
+18,data\real\sample_speech.wav,rubric-v0.1,98.98,VERIFIED,100,94.9,100,100,100
+19,data\injected\sample_pause_1s.wav,rubric-v0.1,96.66,VERIFIED,100,83.3,100,100,100
+20,data\real\sample_speech.wav,rubric-v0.1,98.98,VERIFIED,100,94.9,100,100,100
+21,data\injected\sample_pause_1s.wav,rubric-v0.1,95.42,VERIFIED,100,77.1,100,100,100
+22,data\real\short_speech.wav,rubric-v0.1,89.6,VERIFIED,48,100,100,100,100
+23,data\real\quiet_speech.wav,rubric-v0.1,98.98,VERIFIED,100,94.9,100,100,100
