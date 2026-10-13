@@ -171,3 +171,59 @@ def test_health_and_ready(client):
     resp_r = client.get("/ready")
     assert resp_r.status_code == 200
     assert "status" in resp_r.json()
+
+def test_score_stereo_and_non_16k_audio_normalization(tmp_path, client):
+    # Stereo 44.1 kHz WAV
+    stereo_path = tmp_path / "stereo_44k.wav"
+    create_test_wav(str(stereo_path), channels=2, framerate=44100, duration_s=1.0)
+
+    with open(stereo_path, "rb") as f:
+        resp = client.post("/score", files={"audio": ("stereo_44k.wav", f, "audio/wav")})
+
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["scorer_name"] == "MockScorer"
+    assert "scores" in data
+
+def test_compare_with_nonstandard_sample_rates(tmp_path, client):
+    # 48 kHz stereo reference and 22.05 kHz candidate
+    ref_path = tmp_path / "ref_48k.wav"
+    cand_path = tmp_path / "cand_22k.wav"
+    create_test_wav(str(ref_path), channels=2, framerate=48000, duration_s=1.0)
+    create_test_wav(str(cand_path), channels=1, framerate=22050, duration_s=1.0)
+
+    with open(ref_path, "rb") as f_ref, open(cand_path, "rb") as f_cand:
+        resp = client.post("/compare", files={"reference": f_ref, "candidate": f_cand})
+
+    assert resp.status_code == 200
+    assert "differences" in resp.json()
+
+def test_arena_transform_with_stereo_audio(tmp_path, client):
+    stereo_path = tmp_path / "stereo_audio.wav"
+    create_test_wav(str(stereo_path), channels=2, framerate=44100, duration_s=1.0)
+
+    with open(stereo_path, "rb") as f:
+        resp = client.post(
+            "/arena/transform",
+            files={"audio": ("stereo.wav", f, "audio/wav")},
+            data={"transform_type": "pause", "intensity": "1.0"}
+        )
+
+    assert resp.status_code == 200
+    assert resp.json()["success"] is True
+
+def test_score_with_mp3_recording(tmp_path, client):
+    import soundfile as sf
+    import numpy as np
+    mp3_path = tmp_path / "recording.mp3"
+    arr = np.sin(2 * np.pi * 440 * np.linspace(0, 1, 16000)).astype(np.float32)
+    sf.write(str(mp3_path), arr, 16000, format='MP3')
+
+    with open(mp3_path, "rb") as f:
+        resp = client.post("/score", files={"audio": ("recording.mp3", f, "audio/mpeg")})
+
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["scorer_name"] == "MockScorer"
+    assert "scores" in data
+

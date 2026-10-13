@@ -64,16 +64,83 @@ def readiness():
     }
 
 
+def prepare_uploaded_audio(input_path: str, target_wav_path: str) -> None:
+    """
+    Ensures the audio is formatted as mono 16 kHz PCM WAV.
+    1. If already compliant, preserves directly without quality loss.
+    2. Uses librosa/soundfile for standard audio (MP3, FLAC, OGG, multirate WAV).
+    3. Uses PyAV as universal fallback for containers/codecs like M4A, AAC, WebM, WMA, OPUS.
+    """
+    # 1. Fast path: already compliant 16 kHz mono WAV
+    try:
+        validate_audio(input_path)
+        if os.path.abspath(input_path) != os.path.abspath(target_wav_path):
+            shutil.copyfile(input_path, target_wav_path)
+        return
+    except Exception:
+        pass
+
+    # 2. Try librosa + soundfile
+    try:
+        import librosa
+        import soundfile as sf
+        y, sr = librosa.load(input_path, sr=16000, mono=True)
+        if len(y) > 0:
+            sf.write(target_wav_path, y, 16000, subtype='PCM_16')
+            validate_audio(target_wav_path)
+            return
+    except Exception:
+        pass
+
+    # 3. Universal fallback: PyAV (decodes M4A, AAC, WebM, AMR, WMA, etc.)
+    try:
+        import av
+        import soundfile as sf
+        import numpy as np
+
+        container = av.open(input_path)
+        audio_stream = next((s for s in container.streams if s.type == 'audio'), None)
+        if not audio_stream:
+            container.close()
+            raise ValueError("No audio stream found in file.")
+
+        resampler = av.AudioResampler(format='s16', layout='mono', rate=16000)
+        chunks = []
+        for packet in container.demux(audio_stream):
+            for frame in packet.decode():
+                resampled = resampler.resample(frame)
+                if resampled:
+                    for rf in resampled:
+                        chunks.append(rf.to_ndarray().flatten())
+        flushed = resampler.resample(None)
+        if flushed:
+            for rf in flushed:
+                chunks.append(rf.to_ndarray().flatten())
+        container.close()
+
+        if not chunks:
+            raise ValueError("Audio decoded to 0 samples.")
+
+        audio_data = np.concatenate(chunks)
+        sf.write(target_wav_path, audio_data, 16000, subtype='PCM_16')
+        validate_audio(target_wav_path)
+        return
+    except Exception as e:
+        raise ValueError(f"Could not read or convert audio to 16 kHz mono WAV: {e}")
+
+
 @app.post("/score")
 def score(audio: UploadFile = File(...)):
+    raw_filename = f"raw_{uuid.uuid4().hex}_{audio.filename or 'audio'}"
     temp_filename = f"temp_{uuid.uuid4().hex}.wav"
+    raw_path = os.path.join("artifacts", raw_filename)
     temp_path = os.path.join("artifacts", temp_filename)
     os.makedirs("artifacts", exist_ok=True)
     try:
-        with open(temp_path, "wb") as f:
+        with open(raw_path, "wb") as f:
             shutil.copyfileobj(audio.file, f)
 
-        validate_audio(temp_path)
+        prepare_uploaded_audio(raw_path, temp_path)
 
         with open(temp_path, "rb") as f:
             audio_hash = hashlib.sha256(f.read()).hexdigest()
@@ -88,12 +155,16 @@ def score(audio: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
+        if os.path.exists(raw_path):
+            os.remove(raw_path)
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
 
 @app.post("/compare")
 def compare(reference: UploadFile = File(...), candidate: UploadFile = File(...)):
+    raw_ref = os.path.join("artifacts", f"raw_ref_{uuid.uuid4().hex}")
+    raw_cand = os.path.join("artifacts", f"raw_cand_{uuid.uuid4().hex}")
     ref_filename = f"temp_ref_{uuid.uuid4().hex}.wav"
     cand_filename = f"temp_cand_{uuid.uuid4().hex}.wav"
     ref_path = os.path.join("artifacts", ref_filename)
@@ -101,13 +172,13 @@ def compare(reference: UploadFile = File(...), candidate: UploadFile = File(...)
     os.makedirs("artifacts", exist_ok=True)
 
     try:
-        with open(ref_path, "wb") as f:
+        with open(raw_ref, "wb") as f:
             shutil.copyfileobj(reference.file, f)
-        with open(cand_path, "wb") as f:
+        with open(raw_cand, "wb") as f:
             shutil.copyfileobj(candidate.file, f)
 
-        validate_audio(ref_path)
-        validate_audio(cand_path)
+        prepare_uploaded_audio(raw_ref, ref_path)
+        prepare_uploaded_audio(raw_cand, cand_path)
 
         with open(ref_path, "rb") as f:
             ref_hash = hashlib.sha256(f.read()).hexdigest()
@@ -149,10 +220,9 @@ def compare(reference: UploadFile = File(...), candidate: UploadFile = File(...)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
-        if os.path.exists(ref_path):
-            os.remove(ref_path)
-        if os.path.exists(cand_path):
-            os.remove(cand_path)
+        for p in (raw_ref, raw_cand, ref_path, cand_path):
+            if os.path.exists(p):
+                os.remove(p)
 
 
 @app.post("/arena/transform")
@@ -194,17 +264,19 @@ def transform(
             detail=f"Unsupported transform_type '{transform_type}'. Allowed: 'pause', 'pace', 'volume'."
         )
 
+    raw_filename = f"raw_in_{uuid.uuid4().hex}"
     temp_filename = f"temp_in_{uuid.uuid4().hex}.wav"
     out_filename = f"temp_out_{uuid.uuid4().hex}.wav"
+    raw_path = os.path.join("artifacts", raw_filename)
     temp_path = os.path.join("artifacts", temp_filename)
     out_path = os.path.join("artifacts", out_filename)
     os.makedirs("artifacts", exist_ok=True)
 
     try:
-        with open(temp_path, "wb") as f:
+        with open(raw_path, "wb") as f:
             shutil.copyfileobj(audio.file, f)
 
-        validate_audio(temp_path)
+        prepare_uploaded_audio(raw_path, temp_path)
 
         with open(temp_path, "rb") as f:
             orig_hash = hashlib.sha256(f.read()).hexdigest()
@@ -286,10 +358,9 @@ def transform(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-        if os.path.exists(out_path):
-            os.remove(out_path)
+        for p in (raw_path, temp_path, out_path):
+            if os.path.exists(p):
+                os.remove(p)
 
 
 @app.post("/battery/run")

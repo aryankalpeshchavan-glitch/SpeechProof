@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { WaveformCanvas, type EvidenceRegion } from './WaveformCanvas';
+import { startVoiceRecording, type LiveVoiceRecorder } from './audioRecorder';
 
 interface ReadinessInfo {
   status: string;
@@ -50,6 +51,12 @@ export function App() {
   const [selectedRegionIdx, setSelectedRegionIdx] = useState<number | null>(null);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Live Microphone Recording State
+  const [isRecordingAnalyze, setIsRecordingAnalyze] = useState(false);
+  const [recordSecondsAnalyze, setRecordSecondsAnalyze] = useState(0);
+  const liveRecorderRef = useRef<LiveVoiceRecorder | null>(null);
+  const recordTimerRef = useRef<any>(null);
 
   // Compare Tab State
   const [refFile, setRefFile] = useState<File | null>(null);
@@ -159,6 +166,39 @@ export function App() {
       console.error(err);
     } finally {
       setValidationLoading(false);
+    }
+  };
+
+  const handleStartRecordAnalyze = async () => {
+    try {
+      setAnalyzeError(null);
+      const rec = await startVoiceRecording();
+      liveRecorderRef.current = rec;
+      setIsRecordingAnalyze(true);
+      setRecordSecondsAnalyze(0);
+      recordTimerRef.current = setInterval(() => {
+        setRecordSecondsAnalyze(s => s + 1);
+      }, 1000);
+    } catch (err: any) {
+      setAnalyzeError(err.message || 'Microphone access failed.');
+    }
+  };
+
+  const handleStopRecordAnalyze = async () => {
+    if (recordTimerRef.current) {
+      clearInterval(recordTimerRef.current);
+      recordTimerRef.current = null;
+    }
+    setIsRecordingAnalyze(false);
+    if (liveRecorderRef.current) {
+      try {
+        const file = await liveRecorderRef.current.stop();
+        setAnalyzeFile(file);
+      } catch (err: any) {
+        setAnalyzeError(err.message || 'Failed to process audio recording.');
+      } finally {
+        liveRecorderRef.current = null;
+      }
     }
   };
 
@@ -380,20 +420,54 @@ ${(analyzeResult.regions || []).map((r: any, idx: number) => `
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '16px', alignItems: 'center' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '16px', alignItems: 'flex-start' }}>
               <div>
-                <label className="form-label">Speech Audio File (Mono 16 kHz WAV)</label>
-                <input
-                  type="file"
-                  accept="audio/wav"
-                  className="form-control"
-                  onChange={e => setAnalyzeFile(e.target.files?.[0] || null)}
-                />
+                <label className="form-label">Speech Recording (WAV, MP3, M4A, FLAC, OGG, WebM, AAC — universal normalization)</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input
+                    type="file"
+                    accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg,.webm,.wma,.opus,.m4r"
+                    className="form-control"
+                    style={{ flex: 1 }}
+                    onChange={e => setAnalyzeFile(e.target.files?.[0] || null)}
+                  />
+                  {!isRecordingAnalyze ? (
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
+                      onClick={handleStartRecordAnalyze}
+                    >
+                      <span style={{ color: '#ef4444', fontSize: '14px' }}>●</span> Record Mic
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      style={{
+                        whiteSpace: 'nowrap',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        borderColor: '#ef4444',
+                        color: '#f87171',
+                        background: 'rgba(239, 68, 68, 0.1)'
+                      }}
+                      onClick={handleStopRecordAnalyze}
+                    >
+                      <span className="spinner" style={{ width: '12px', height: '12px', borderTopColor: '#ef4444' }} />
+                      Stop ({Math.floor(recordSecondsAnalyze / 60)}:{(recordSecondsAnalyze % 60).toString().padStart(2, '0')})
+                    </button>
+                  )}
+                </div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>
+                  Supports smartphone voice memos, microphone clips, MP3s, M4A, or any standard audio format (auto-converted to 16 kHz mono).
+                </div>
               </div>
               <div style={{ paddingTop: '22px' }}>
                 <button
                   className="btn btn-primary"
-                  disabled={!analyzeFile || analyzing}
+                  disabled={!analyzeFile || analyzing || isRecordingAnalyze}
                   onClick={handleAnalyze}
                 >
                   {analyzing ? (
@@ -672,10 +746,10 @@ ${(analyzeResult.regions || []).map((r: any, idx: number) => `
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
               <div>
-                <label className="form-label">Reference Recording (WAV)</label>
+                <label className="form-label">Reference Recording (WAV, MP3, M4A, FLAC, OGG, WebM, AAC)</label>
                 <input
                   type="file"
-                  accept="audio/wav"
+                  accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg,.webm,.wma,.opus,.m4r"
                   className="form-control"
                   onChange={e => setRefFile(e.target.files?.[0] || null)}
                 />
@@ -685,10 +759,10 @@ ${(analyzeResult.regions || []).map((r: any, idx: number) => `
               </div>
 
               <div>
-                <label className="form-label">Candidate Delivery (WAV)</label>
+                <label className="form-label">Candidate Delivery (WAV, MP3, M4A, FLAC, OGG, WebM, AAC)</label>
                 <input
                   type="file"
-                  accept="audio/wav"
+                  accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg,.webm,.wma,.opus,.m4r"
                   className="form-control"
                   onChange={e => setCandFile(e.target.files?.[0] || null)}
                 />
@@ -804,10 +878,10 @@ ${(analyzeResult.regions || []).map((r: any, idx: number) => `
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div>
-                <label className="form-label">Base Recording (Mono 16 kHz WAV)</label>
+                <label className="form-label">Base Recording (WAV, MP3, M4A, FLAC, OGG, WebM, AAC)</label>
                 <input
                   type="file"
-                  accept="audio/wav"
+                  accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg,.webm,.wma,.opus,.m4r"
                   className="form-control"
                   onChange={e => setArenaFile(e.target.files?.[0] || null)}
                 />
