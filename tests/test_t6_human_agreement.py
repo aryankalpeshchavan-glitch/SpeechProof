@@ -15,3 +15,26 @@ def test_spearman_invalid():
 
 def test_icc_missing():
     assert calculate_icc([]) is None
+    assert calculate_icc([[1.0]]) is None
+    assert calculate_icc([[1.0, 2.0]]) is None  # only 1 target
+    assert calculate_icc([[1.0, 2.0], [1.0]]) is None  # jagged rows
+
+def test_icc_perfect_agreement():
+    ratings = [
+        [1.0, 1.0],
+        [2.0, 2.0],
+        [3.0, 3.0]
+    ]
+    icc = calculate_icc(ratings)
+    assert icc is not None
+    assert abs(icc - 1.0) < 1e-5
+
+def test_icc_with_rater_bias():
+    ratings = [
+        [1.0, 2.0],
+        [2.0, 3.0],
+        [3.0, 4.0]
+    ]
+    icc = calculate_icc(ratings)
+    assert icc is not None
+    assert abs(icc - 0.8) < 1e-5

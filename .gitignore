@@ -231,3 +231,10 @@ build/
 eval/outputs/
 
 eval/outputs/
+
+web/node_modules/
+web/dist/
+artifacts/
+model_cache/
+
+*.wav

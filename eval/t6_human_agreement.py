@@ -19,11 +19,46 @@ def spearman_rho(x: List[float], y: List[float]) -> float:
     return rho
 
 def calculate_icc(ratings: List[List[float]]) -> Optional[float]:
-    # Synthetic ICC(2,k) calculation
-    if not ratings or len(ratings[0]) < 2:
+    """
+    Calculates Intraclass Correlation Coefficient ICC(2,k):
+    Two-way random effects, absolute agreement, average of k raters (Shrout & Fleiss, 1979).
+    ratings: n x k matrix where rows are targets and columns are raters.
+    """
+    if not ratings or len(ratings) < 2:
         return None
-    # For testing purposes, implement a mock ICC
-    return 0.8
+    k = len(ratings[0])
+    if k < 2:
+        return None
+    for row in ratings:
+        if len(row) != k:
+            return None
+
+    n = len(ratings)
+    total_ratings = n * k
+    grand_mean = sum(val for row in ratings for val in row) / total_ratings
+
+    row_means = [sum(row) / k for row in ratings]
+    col_means = [sum(ratings[i][j] for i in range(n)) / n for j in range(k)]
+
+    ssr = k * sum((rm - grand_mean) ** 2 for rm in row_means)
+    msr = ssr / (n - 1)
+
+    ssc = n * sum((cm - grand_mean) ** 2 for cm in col_means)
+    msc = ssc / (k - 1)
+
+    sst = sum((val - grand_mean) ** 2 for row in ratings for val in row)
+    sse = max(0.0, sst - ssr - ssc)
+    df_e = (n - 1) * (k - 1)
+    if df_e <= 0:
+        return None
+    mse = sse / df_e
+
+    denominator = msr + (msc - mse) / n
+    if denominator == 0:
+        return 0.0 if (msr - mse) == 0 else None
+
+    icc = (msr - mse) / denominator
+    return float(icc)
 
 def run():
     print("Running T6 Human Agreement...")

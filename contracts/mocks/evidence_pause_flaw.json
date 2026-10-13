@@ -1,0 +1,31 @@
+{
+  "mock": true,
+  "source": "development_fixture",
+  "rubric_version": "v1-mock",
+  "git_sha": "abcdef",
+  "audio_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "asr_model": "mock-whisper",
+  "duration_s": 60.0,
+  "quality_flags": [],
+  "scores": {
+    "pace": 0.9,
+    "pausing": 0.4,
+    "fluency": 0.95,
+    "pitch": 0.85,
+    "energy": 0.92
+  },
+  "regions": [
+    {
+      "type": "pause_flaw",
+      "start_s": 12.5,
+      "end_s": 14.2,
+      "measure": "long_pause",
+      "value": 1.7,
+      "threshold": 1.2,
+      "words_before": "and then",
+      "words_after": "we went"
+    }
+  ],
+  "events": [],
+  "output_sha256": "hash-pause-flaw"
+}

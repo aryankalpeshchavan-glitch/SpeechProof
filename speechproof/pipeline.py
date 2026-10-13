@@ -66,15 +66,15 @@ class SpeechProofScorer(ScorerProtocol):
         return ScorerOutput(
             scorer_name="SpeechProof",
             scorer_version="1.0.0",
-            scores=evidence.get("scores", {}),
+            scores={k: float(v) for k, v in evidence.get("scores", {}).items() if v is not None},
             regions=evidence.get("evidence", []),
             events=[],
             quality_flags=["fluency_unavailable"] if "fluency" not in evidence.get("scores", {}) else [],
             audio_sha256=audio_sha256,
-            duration_s=evidence.get("features", {}).get("duration_sec", 0.0),
+            duration_s=float(evidence.get("features", {}).get("duration_sec", 0.0)),
             metadata={
                 "rubric_version": evidence.get("rubric_version"),
-                "overall_score": evidence.get("overall_score"),
+                "overall_score": float(evidence.get("overall_score")) if evidence.get("overall_score") is not None else None,
                 "evidence_sha256": evidence.get("sha256"),
                 "run_id": evidence.get("run_id"),
                 "words": evidence.get("words", [])

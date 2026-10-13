@@ -1,0 +1,33 @@
+{
+  "mock": true,
+  "source": "development_fixture",
+  "rubric_version": "v1-mock",
+  "git_sha": "abcdef",
+  "audio_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "asr_model": "mock-whisper",
+  "duration_s": 60.0,
+  "quality_flags": [],
+  "scores": {
+    "pace": 0.95,
+    "pausing": 0.85,
+    "fluency": 0.3,
+    "pitch": 0.85,
+    "energy": 0.92
+  },
+  "regions": [
+    {
+      "type": "filler_flaw",
+      "start_s": 20.1,
+      "end_s": 20.6,
+      "measure": "filler",
+      "value": 1.0,
+      "threshold": 0.0,
+      "words_before": "I think",
+      "words_after": "um that"
+    }
+  ],
+  "events": [
+    {"type": "filler", "start_s": 20.1, "end_s": 20.6}
+  ],
+  "output_sha256": "hash-filler-flaw"
+}
