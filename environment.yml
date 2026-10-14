@@ -20,3 +20,8 @@ dependencies:
     - jsonschema
     - python-multipart
     - httpx
+    - av
+    - python-dotenv
+    - supabase
+    - nvidia-cublas-cu12
+    - nvidia-cudnn-cu12

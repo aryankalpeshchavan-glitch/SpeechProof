@@ -137,18 +137,33 @@ flowchart TD
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start for Judges & Evaluators
 
-### Prerequisites
-- **OS:** Windows 10/11, Linux, or macOS.
-- **Python:** 3.11 or higher (Python 3.14 compatible).
-- **Node.js:** 18.0 or higher (Node 20+ recommended).
-- **GPU (Recommended):** NVIDIA GPU with CUDA for real-time `large-v3` Whisper inference.
+### ⚡ Option A: 1-Click Automated Launch (Recommended)
+Run the automated launcher which creates the virtual environment, installs dependencies, verifies the offline Whisper `large-v3` cache, compiles the React frontend, and opens the application in your browser:
 
-### 1. Clone & Set Up Python Environment
+- **Windows (Command Prompt):** Double-click `run.bat` or run:
+  ```cmd
+  run.bat
+  ```
+- **Windows (PowerShell):**
+  ```powershell
+  .\run.ps1
+  ```
 
-Using Windows PowerShell:
+---
+
+### 🛠️ Option B: Step-by-Step Manual Setup
+
+#### 1. Prerequisites
+- **Python:** 3.11+ (Python 3.11–3.14 compatible).
+- **Node.js:** 18.0+ (Node 20+ recommended).
+- **GPU (Recommended):** NVIDIA GPU with Driver 525+ (CUDA 12+).
+  > **Note on Windows CUDA:** CTranslate2 requires CUDA 12 runtime libraries (`cublas64_12.dll`). These are included automatically via `pip install -r requirements.txt` (`nvidia-cublas-cu12` and `nvidia-cudnn-cu12`), so you do **not** need a separate manual CUDA Toolkit installation.
+
+#### 2. Environment & Dependency Setup
 ```powershell
+# Clone repository
 git clone https://github.com/aryankalpeshchavan-glitch/SpeechProof.git
 cd SpeechProof
 
@@ -157,23 +172,29 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 
 # Install Python dependencies
-pip install -r environment.yml  # or pip install -e .
+pip install --upgrade pip
+pip install -r requirements.txt
+# (or if using Conda: conda env create -f environment.yml && conda activate speechproof)
 ```
 
-### 2. Verify GPU and Model Readiness
+#### 3. Prepare Offline Whisper Model
+Download the `large-v3` weights once into the local `./model_cache` folder:
+```powershell
+python -m speechproof.asr --prepare-model
+```
 
+#### 4. Verify GPU and Model Readiness
 SpeechProof enforces a strict **no-silent-CPU-fallback** policy when CUDA is configured:
 ```powershell
 python gpu_preflight.py
 ```
 Expected output:
 ```text
-ctranslate2 cuda supported types: {'float16', ...}
+ctranslate2 cuda supported types: {'float16', 'int8_float16', ...}
 WhisperModel initialized successfully on GPU.
 ```
 
-### 3. Build Frontend & Launch Server
-
+#### 5. Build Frontend & Launch Server
 ```powershell
 # Build React 19 production bundle
 cd web
@@ -182,7 +203,7 @@ npm run build
 cd ..
 
 # Launch FastAPI application server
-python -m uvicorn sp_platform.api:app --host 127.0.0.1 --port 8000 --reload
+python -m uvicorn sp_platform.api:app --host 127.0.0.1 --port 8000
 ```
 
 Open your browser at **`http://localhost:8000`** to access the complete application.

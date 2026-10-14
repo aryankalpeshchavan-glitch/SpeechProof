@@ -1,4 +1,20 @@
 import os
+import site
+
+# Ensure NVIDIA CUDA DLLs (cublas, cudnn) are discoverable on Windows
+try:
+    for site_dir in site.getsitepackages():
+        nv_dir = os.path.join(site_dir, "nvidia")
+        if os.path.exists(nv_dir):
+            for lib in ["cublas", "cudnn", "cufft", "curand", "cusolver", "cusparse"]:
+                bin_dir = os.path.join(nv_dir, lib, "bin")
+                if os.path.exists(bin_dir):
+                    if hasattr(os, "add_dll_directory"):
+                        os.add_dll_directory(bin_dir)
+                    os.environ["PATH"] = bin_dir + os.pathsep + os.environ.get("PATH", "")
+except Exception:
+    pass
+
 import shutil
 import uuid
 import hashlib
