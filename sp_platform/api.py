@@ -64,69 +64,20 @@ def readiness():
     }
 
 
+from speechproof.audio_io import ingest_audio_file, AudioIngestionError
+
+
 def prepare_uploaded_audio(input_path: str, target_wav_path: str) -> None:
     """
     Ensures the audio is formatted as mono 16 kHz PCM WAV.
-    1. If already compliant, preserves directly without quality loss.
-    2. Uses librosa/soundfile for standard audio (MP3, FLAC, OGG, multirate WAV).
-    3. Uses PyAV as universal fallback for containers/codecs like M4A, AAC, WebM, WMA, OPUS.
+    Delegates to speechproof.audio_io for canonical ingestion and validation.
     """
-    # 1. Fast path: already compliant 16 kHz mono WAV
     try:
-        validate_audio(input_path)
-        if os.path.abspath(input_path) != os.path.abspath(target_wav_path):
-            shutil.copyfile(input_path, target_wav_path)
-        return
-    except Exception:
-        pass
-
-    # 2. Try librosa + soundfile
-    try:
-        import librosa
-        import soundfile as sf
-        y, sr = librosa.load(input_path, sr=16000, mono=True)
-        if len(y) > 0:
-            sf.write(target_wav_path, y, 16000, subtype='PCM_16')
-            validate_audio(target_wav_path)
-            return
-    except Exception:
-        pass
-
-    # 3. Universal fallback: PyAV (decodes M4A, AAC, WebM, AMR, WMA, etc.)
-    try:
-        import av
-        import soundfile as sf
-        import numpy as np
-
-        container = av.open(input_path)
-        audio_stream = next((s for s in container.streams if s.type == 'audio'), None)
-        if not audio_stream:
-            container.close()
-            raise ValueError("No audio stream found in file.")
-
-        resampler = av.AudioResampler(format='s16', layout='mono', rate=16000)
-        chunks = []
-        for packet in container.demux(audio_stream):
-            for frame in packet.decode():
-                resampled = resampler.resample(frame)
-                if resampled:
-                    for rf in resampled:
-                        chunks.append(rf.to_ndarray().flatten())
-        flushed = resampler.resample(None)
-        if flushed:
-            for rf in flushed:
-                chunks.append(rf.to_ndarray().flatten())
-        container.close()
-
-        if not chunks:
-            raise ValueError("Audio decoded to 0 samples.")
-
-        audio_data = np.concatenate(chunks)
-        sf.write(target_wav_path, audio_data, 16000, subtype='PCM_16')
-        validate_audio(target_wav_path)
-        return
+        ingest_audio_file(input_path, target_wav_path)
+    except AudioIngestionError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise ValueError(f"Could not read or convert audio to 16 kHz mono WAV: {e}")
+        raise HTTPException(status_code=400, detail=f"Audio ingestion failed: {e}")
 
 
 @app.post("/score")

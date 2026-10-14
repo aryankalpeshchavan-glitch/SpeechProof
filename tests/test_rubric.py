@@ -79,3 +79,33 @@ def test_scores_and_penalties_stay_within_range():
         assert 0 <= value <= 100
 
     assert 0 <= result["overall_score"] <= 100
+
+
+def test_fluency_absence_does_not_bias_overall_score():
+    features_without_fluency = {
+        "speech_rate_wpm": 140,
+        "pause_ratio": 0,
+        "pause_max_sec": 0,
+        "pause_count": 0,
+        "pitch_std_semitones": 1.5,
+        "rms_db_std": 4.0,
+    }
+    result = score(features_without_fluency)
+    assert "fluency" not in result["scores"]
+    assert "fluency" not in result["penalties"]
+    assert result["overall_score"] == 100.0
+
+
+def test_fluency_penalty_proportional_to_excess_fillers():
+    features = {
+        "speech_rate_wpm": 140,
+        "pause_ratio": 0,
+        "pause_max_sec": 0,
+        "pause_count": 0,
+        "filler_rate_per_min": 7,  # max is 5, excess is 2 -> penalty = 20 -> score = 80
+        "pitch_std_semitones": 1.5,
+        "rms_db_std": 4.0,
+    }
+    result = score(features)
+    assert result["scores"]["fluency"] == 80.0
+    assert result["penalties"]["fluency"] == 20.0

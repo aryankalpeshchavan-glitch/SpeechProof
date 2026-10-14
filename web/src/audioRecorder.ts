@@ -63,7 +63,11 @@ export async function convertBlobToWavFile(blob: Blob, filename = 'speech_record
     const arrayBuffer = await blob.arrayBuffer();
     const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
     const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-    return await convertAudioBufferToWavFile(audioBuffer, filename);
+    const wavFile = await convertAudioBufferToWavFile(audioBuffer, filename);
+    if (audioCtx.state !== 'closed') {
+      audioCtx.close().catch(() => {});
+    }
+    return wavFile;
   } catch (err) {
     // If Web Audio API cannot decode (e.g., rare container), return blob as raw File for backend PyAV processing
     const mime = blob.type || 'audio/webm';
@@ -74,6 +78,8 @@ export async function convertBlobToWavFile(blob: Blob, filename = 'speech_record
 export interface LiveVoiceRecorder {
   stop: () => Promise<File>;
   cancel: () => void;
+  getAudioLevel: () => number;
+  getFrequencyData?: (dataArray: Uint8Array) => void;
 }
 
 export async function startVoiceRecording(): Promise<LiveVoiceRecorder> {
@@ -82,6 +88,23 @@ export async function startVoiceRecording(): Promise<LiveVoiceRecorder> {
   }
 
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+  let audioCtx: AudioContext | null = null;
+  let analyser: AnalyserNode | null = null;
+  let freqData: Uint8Array | null = null;
+
+  try {
+    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 128;
+    analyser.smoothingTimeConstant = 0.65;
+    source.connect(analyser);
+    freqData = new Uint8Array(analyser.frequencyBinCount);
+  } catch (e) {
+    // Web Audio analyzer optional
+  }
+
   const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
     ? 'audio/webm;codecs=opus'
     : MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')
@@ -99,10 +122,31 @@ export async function startVoiceRecording(): Promise<LiveVoiceRecorder> {
 
   mediaRecorder.start(250);
 
+  const cleanupAudioContext = () => {
+    if (audioCtx && audioCtx.state !== 'closed') {
+      audioCtx.close().catch(() => {});
+    }
+  };
+
   return {
+    getAudioLevel: () => {
+      if (!analyser || !freqData) return 0;
+      analyser.getByteFrequencyData(freqData as any);
+      let sum = 0;
+      for (let i = 0; i < freqData.length; i++) {
+        sum += freqData[i];
+      }
+      return Math.min(1.0, (sum / freqData.length) / 128);
+    },
+    getFrequencyData: (target: Uint8Array) => {
+      if (analyser) {
+        analyser.getByteFrequencyData(target as any);
+      }
+    },
     stop: async () => {
       return new Promise<File>((resolve, reject) => {
         mediaRecorder.onstop = async () => {
+          cleanupAudioContext();
           stream.getTracks().forEach((track) => track.stop());
           try {
             const rawBlob = new Blob(chunks, { type: mimeType || 'audio/webm' });
@@ -117,6 +161,7 @@ export async function startVoiceRecording(): Promise<LiveVoiceRecorder> {
     },
     cancel: () => {
       try {
+        cleanupAudioContext();
         stream.getTracks().forEach((track) => track.stop());
         if (mediaRecorder.state !== 'inactive') {
           mediaRecorder.stop();
