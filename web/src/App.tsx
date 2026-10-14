@@ -163,19 +163,39 @@ export function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordSeconds, setRecordSeconds] = useState(0);
   const [micLevel, setMicLevel] = useState(0);
+  const [freqData, setFreqData] = useState<Uint8Array | null>(null);
   const liveRecorderRef = useRef<LiveVoiceRecorder | null>(null);
   const recordTimerRef = useRef<any>(null);
+  const freqArrayRef = useRef<Uint8Array>(new Uint8Array(32));
 
-  // Monitor real-time audio amplitude for Living Audio Orb
+  // Scroll progress for hero-to-workspace parallax and storytelling
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const heroH = window.innerHeight * 0.85;
+      const p = Math.min(1.0, Math.max(0, window.scrollY / heroH));
+      setScrollProgress(p);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Monitor real-time audio amplitude and frequency for Living Audio Orb
   useEffect(() => {
     if (!isRecording) {
       setMicLevel(0);
+      setFreqData(null);
       return;
     }
     let animId = 0;
     const poll = () => {
       if (liveRecorderRef.current) {
         setMicLevel(liveRecorderRef.current.getAudioLevel());
+        if (liveRecorderRef.current.getFrequencyData) {
+          liveRecorderRef.current.getFrequencyData(freqArrayRef.current);
+          setFreqData(freqArrayRef.current);
+        }
       }
       animId = requestAnimationFrame(poll);
     };
@@ -418,6 +438,8 @@ ${(analyzeResult.regions || []).map((r: any, i: number) => `
         <HeroCanvas
           state={orbState}
           audioLevel={micLevel}
+          frequencyData={freqData}
+          scrollProgress={scrollProgress}
           score={analyzeResult?.metadata?.overall_score}
           onOrbClick={() => {
             if (isRecording) {
@@ -456,9 +478,8 @@ ${(analyzeResult.regions || []).map((r: any, i: number) => `
             <span className="hero-headline-accent">Fully auditable.</span>
           </h1>
           <p className="hero-sub">
-            Deterministic ASR scoring with SHA-256 grounded evidence,
-            timestamped flaw intervals, and contrastive crash testing.
-            Upload any audio format — we normalize it server-side.
+            Explore speech delivery through measurable acoustic features,
+            timestamped evidence, and controlled adversarial testing.
           </p>
 
           {/* Dynamic Living Orb Status Banner */}
@@ -485,20 +506,27 @@ ${(analyzeResult.regions || []).map((r: any, i: number) => `
             <div className="hero-actions">
               <button
                 className="btn btn-hero-primary"
-                onClick={() => { setActiveTab('analyze'); scrollToWorkspace(); }}
+                onClick={() => {
+                  setActiveTab('analyze');
+                  scrollToWorkspace();
+                  setTimeout(() => document.getElementById('analyze-file-input')?.focus(), 350);
+                }}
               >
                 ◈ Analyse a Recording
               </button>
               <button
                 className="btn btn-hero-mic"
                 onClick={handleStartRecord}
-                aria-label="Start recording from microphone"
+                aria-label="Record voice using microphone"
               >
-                🎙 Record Voice
+                🎙 Record My Voice
               </button>
               <button
                 className="btn btn-hero-secondary"
-                onClick={() => { setActiveTab('compare'); scrollToWorkspace(); }}
+                onClick={() => {
+                  setActiveTab('compare');
+                  scrollToWorkspace();
+                }}
               >
                 ⇄ Compare Deliveries
               </button>
@@ -509,6 +537,126 @@ ${(analyzeResult.regions || []).map((r: any, i: number) => `
         <div className="hero-scroll-hint" aria-hidden="true" onClick={scrollToWorkspace} style={{ cursor: 'pointer' }}>
           <div className="scroll-mouse" />
           <span>Scroll to workspace</span>
+        </div>
+      </section>
+
+      {/* SCROLL-DRIVEN STORYTELLING / METHODOLOGY PILLARS */}
+      <section className="story-section" id="how-it-works" aria-label="How SpeechProof works">
+        <div className="story-container">
+          <div className="story-header">
+            <div className="hero-eyebrow">SYSTEM ARCHITECTURE & METHODOLOGY</div>
+            <h2 className="section-title">How Auditable Speech Intelligence Works</h2>
+            <p className="section-subtitle">
+              Five deterministic pillars replacing black-box AI scores with verifiable acoustic evidence,
+              millisecond waveform alignment, and adversarial stress-testing.
+            </p>
+          </div>
+
+          <div className="story-grid">
+            {/* Pillar A */}
+            <div className="story-card">
+              <div>
+                <span className="story-card-icon" aria-hidden="true">🎙️</span>
+                <span className="story-card-badge">Universal Ingestion</span>
+                <h3 className="story-card-title">1. Record or Upload Audio</h3>
+                <p className="story-card-desc">
+                  Upload any container — MP3, M4A, AAC, FLAC, OGG, WebM, MP4, or record live through your
+                  browser microphone. Server-side pipeline normalizes audio to 16 kHz mono PCM WAV.
+                </p>
+              </div>
+              <button
+                className="story-card-btn"
+                onClick={() => {
+                  setActiveTab('analyze');
+                  scrollToWorkspace();
+                  setTimeout(() => document.getElementById('analyze-file-input')?.focus(), 350);
+                }}
+                aria-label="Upload audio in analysis workspace"
+              >
+                Upload or Record ➔
+              </button>
+            </div>
+
+            {/* Pillar B */}
+            <div className="story-card">
+              <div>
+                <span className="story-card-icon" aria-hidden="true">⚡</span>
+                <span className="story-card-badge">Deterministic Rubric</span>
+                <h3 className="story-card-title">2. Analyze Acoustic Delivery</h3>
+                <p className="story-card-desc">
+                  Local offline ASR via faster-whisper (large-v3 CUDA float16) extracts word-level alignments.
+                  Computes pace (WPM), pause ratio, pitch variation, and vocal energy without LLM hallucinations.
+                </p>
+              </div>
+              <button
+                className="story-card-btn"
+                onClick={() => { setActiveTab('analyze'); scrollToWorkspace(); }}
+                aria-label="Inspect delivery scoring"
+              >
+                Inspect Rubric ➔
+              </button>
+            </div>
+
+            {/* Pillar C */}
+            <div className="story-card">
+              <div>
+                <span className="story-card-icon" aria-hidden="true">🎯</span>
+                <span className="story-card-badge">Temporal Alignment</span>
+                <h3 className="story-card-title">3. Inspect Auditable Evidence</h3>
+                <p className="story-card-desc">
+                  Every detected hesitation or volume anomaly is anchored to exact millisecond intervals on
+                  an interactive waveform. Click any marker to view surrounding words and scrub playback.
+                </p>
+              </div>
+              <button
+                className="story-card-btn"
+                onClick={() => { setActiveTab('analyze'); scrollToWorkspace(); }}
+                aria-label="View interactive waveform"
+              >
+                View Waveform ➔
+              </button>
+            </div>
+
+            {/* Pillar D */}
+            <div className="story-card">
+              <div>
+                <span className="story-card-icon" aria-hidden="true">⇄</span>
+                <span className="story-card-badge">Contrastive Takes</span>
+                <h3 className="story-card-title">4. Compare Multiple Takes</h3>
+                <p className="story-card-desc">
+                  Side-by-side delivery analysis between reference and candidate recordings. Evaluates exact
+                  dimension deltas (+/- WPM, pause changes) with methodological guidance.
+                </p>
+              </div>
+              <button
+                className="story-card-btn"
+                onClick={() => { setActiveTab('compare'); scrollToWorkspace(); }}
+                aria-label="Open compare tab"
+              >
+                Compare Deliveries ➔
+              </button>
+            </div>
+
+            {/* Pillar E */}
+            <div className="story-card">
+              <div>
+                <span className="story-card-icon" aria-hidden="true">⚗️</span>
+                <span className="story-card-badge">Adversarial Testing</span>
+                <h3 className="story-card-title">5. Stress-Test the Rubric</h3>
+                <p className="story-card-desc">
+                  Audits whether the scorer deserves trust. Injects calibrated pauses (0.5–5.0s), rate
+                  time-stretches (0.5–1.5x), and volume gains (-12 to +12 dB) to verify dose-response.
+                </p>
+              </div>
+              <button
+                className="story-card-btn"
+                onClick={() => { setActiveTab('arena'); scrollToWorkspace(); }}
+                aria-label="Launch crash test lab"
+              >
+                Launch Crash Lab ➔
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 

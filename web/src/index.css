@@ -259,6 +259,98 @@ a:hover { opacity:.85; }
   backdrop-filter:blur(8px);
 }
 
+/* STORYTELLING / METHODOLOGY PILLARS */
+.story-section {
+  position:relative;
+  background:linear-gradient(180deg, var(--midnight) 0%, rgba(16,19,43,.9) 50%, var(--midnight) 100%);
+  padding:80px 32px 100px;
+  overflow:hidden;
+}
+.story-container {
+  max-width:1360px;
+  margin:0 auto;
+}
+.story-header {
+  text-align:center;
+  max-width:760px;
+  margin:0 auto 56px;
+}
+.story-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:20px;
+}
+.story-card {
+  background:rgba(30, 32, 75, 0.45);
+  border:1px solid rgba(121, 107, 250, 0.16);
+  border-radius:var(--radius-lg);
+  padding:28px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  backdrop-filter:blur(12px);
+  position:relative;
+  overflow:hidden;
+  transition:all var(--transition-base);
+}
+.story-card:hover {
+  transform:translateY(-4px);
+  border-color:rgba(121, 107, 250, 0.4);
+  box-shadow:0 12px 32px rgba(121, 107, 250, 0.15);
+  background:rgba(36, 38, 90, 0.65);
+}
+.story-card-icon {
+  font-size:30px;
+  margin-bottom:14px;
+  display:inline-block;
+  filter:drop-shadow(0 0 10px rgba(121, 107, 250, 0.4));
+}
+.story-card-title {
+  font-family:var(--font-display);
+  font-size:17px;
+  font-weight:700;
+  color:var(--soft-canvas);
+  margin-bottom:10px;
+  line-height:1.3;
+}
+.story-card-desc {
+  font-size:13.5px;
+  color:var(--muted-text);
+  line-height:1.6;
+  margin-bottom:18px;
+  flex:1;
+}
+.story-card-badge {
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  font-weight:600;
+  color:var(--mint);
+  background:var(--mint-dim);
+  border:1px solid rgba(54, 226, 180, 0.25);
+  border-radius:100px;
+  padding:3px 10px;
+  margin-bottom:16px;
+  width:fit-content;
+}
+.story-card-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:transparent;
+  border:none;
+  color:var(--violet-light);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  padding:0;
+  transition:color var(--transition-fast), transform var(--transition-fast);
+}
+.story-card-btn:hover {
+  color:var(--mint);
+  transform:translateX(3px);
+}
+
 /* WORKSPACE */
 .workspace-section { background:var(--midnight); }
 .workspace-container {
